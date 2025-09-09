@@ -1,25 +1,70 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Vue from 'vue'
+import Router from 'vue-router'
+import LoginView from '../views/LoginView.vue'
+import ExaminerView from '../views/ExaminerView.vue'
+import SupervisorView from '../views/SupervisorView.vue'
+
+Vue.use(Router)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'Login',
+    component: LoginView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/examiner',
+    name: 'Examiner',
+    component: ExaminerView,
+    meta: { requiresAuth: true, role: 'pemeriksa' }
+  },
+  {
+    path: '/supervisor',
+    name: 'Supervisor',
+    component: SupervisorView,
+    meta: { requiresAuth: true, role: 'atasan' }
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes
 })
 
-export default router
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = false; // Replace with actual authentication check
+  const userRole = ''; // Replace with actual user role
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({ name: 'Login' });
+    } else if (to.meta.role && to.meta.role !== userRole) {
+      next({ name: 'Login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+})
+
+export default router;
+
+// import { createRouter, createWebHistory } from 'vue-router';
+// import LoginView from '../views/LoginView.vue';
+// import ExaminerView from '../views/ExaminerView.vue';
+// import SupervisorView from '../views/SupervisorView.vue';
+
+// const routes = [
+//   { path: '/', component: LoginView },
+//   { path: '/examiner', component: ExaminerView },
+//   { path: '/supervisor', component: SupervisorView },
+// ];
+
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes,
+// });
+
+// export default router;

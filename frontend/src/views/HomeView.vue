@@ -1,115 +1,150 @@
 <template>
-  <div class="home">
-    <h1>Daftar Item</h1>
-    <form @submit.prevent="addItem" class="add-item-form">
-      <input v-model="newItemName" placeholder="Nama Item" required />
-      <input v-model="newItemDescription" placeholder="Deskripsi" />
-      <button type="submit">Tambah</button>
-    </form>
-    <ul>
-      <li v-for="item in items" :key="item.id" class="item-card">
-        <div>
-          <h3>{{ item.name }}</h3>
-          <p>{{ item.description }}</p>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Halaman Login</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            v-model="email" 
+            placeholder="masukkan email Anda"
+            required 
+          />
         </div>
-        <button @click="deleteItem(item.id)">Hapus</button>
-      </li>
-    </ul>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            v-model="password" 
+            placeholder="masukkan password Anda"
+            required 
+          />
+        </div>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <button type="submit" class="login-button">Login</button>
+      </form>
+    </div>
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue';
 
-export default {
-  name: 'HomeView',
-  data() {
-    return {
-      items: [],
-      newItemName: '',
-      newItemDescription: '',
-    };
-  },
-  created() {
-    this.fetchItems();
-  },
-  methods: {
-    async fetchItems() {
-      try {
-        const response = await axios.get('http://localhost:3000/api/items');
-        this.items = response.data.data;
-      } catch (error) {
-        console.error('Error fetching items:', error);
-      }
-    },
-    async addItem() {
-      try {
-        const response = await axios.post('http://localhost:3000/api/items', {
-          name: this.newItemName,
-          description: this.newItemDescription,
-        });
-        this.items.push(response.data);
-        this.newItemName = '';
-        this.newItemDescription = '';
-      } catch (error) {
-        console.error('Error adding item:', error);
-      }
-    },
-    async deleteItem(id) {
-      try {
-        await axios.delete(`http://localhost:3000/api/items/${id}`);
-        this.items = this.items.filter(item => item.id !== id);
-      } catch (error) {
-        console.error('Error deleting item:', error);
-      }
-    },
-  },
+// --- STATE ---
+// ref() digunakan untuk membuat variabel reaktif.
+const email = ref('');
+const password = ref('');
+const errorMessage = ref('');
+
+// --- METHODS ---
+const handleLogin = () => {
+  // Reset pesan error setiap kali tombol login ditekan
+  errorMessage.value = '';
+
+  // 1. Validasi Sederhana
+  if (!email.value || !password.value) {
+    errorMessage.value = 'Email dan password tidak boleh kosong.';
+    return;
+  }
+
+  // 2. Simulasi Panggilan API (Backend)
+  // Di aplikasi nyata, Anda akan mengirimkan data ini ke server.
+  console.log('Data yang dikirim:', {
+    email: email.value,
+    password: password.value,
+  });
+
+  // Contoh simulasi: jika email dan password benar
+  if (email.value === 'admin@example.com' && password.value === 'password123') {
+    // Tampilkan pesan sukses
+    alert('Login berhasil! Anda akan diarahkan ke halaman dashboard.');
+    
+    // Di aplikasi nyata, Anda akan melakukan redirect ke halaman lain, misalnya:
+    // router.push('/dashboard');
+    
+  } else {
+    // Jika salah, tampilkan pesan error
+    errorMessage.value = 'Email atau password yang Anda masukkan salah.';
+  }
 };
 </script>
 
 <style scoped>
-.home {
-  max-width: 600px;
-  margin: 0 auto;
-  font-family: sans-serif;
-}
-.add-item-form {
+/* 'scoped' berarti style ini hanya berlaku untuk komponen ini saja */
+.login-container {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.add-item-form input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.add-item-form button {
-  padding: 8px 12px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-.item-card {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.item-card button {
-  background-color: #e74c3c;
+
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* Agar padding tidak menambah lebar input */
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 </style>
