@@ -1,70 +1,75 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import ExaminerView from '../views/ExaminerView.vue'
-import SupervisorView from '../views/SupervisorView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+// import Vue from 'vue'
+// import Router from 'vue-router'
+import LandingView from '../views/LandingView.vue'
 
-Vue.use(Router)
+// import LoginView from '../views/LoginView.vue'
+// import ExaminerView from '../views/ExaminerView.vue'
+// import SupervisorView from '../views/SupervisorView.vue'
 
-const routes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: LoginView
-  },
-  {
-    path: '/examiner',
-    name: 'Examiner',
-    component: ExaminerView,
-    meta: { requiresAuth: true, role: 'pemeriksa' }
-  },
-  {
-    path: '/supervisor',
-    name: 'Supervisor',
-    component: SupervisorView,
-    meta: { requiresAuth: true, role: 'atasan' }
-  }
-]
+// Vue.use(Router)
 
-const router = new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
-
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = false; // Replace with actual authentication check
-  const userRole = ''; // Replace with actual user role
-
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next({ name: 'Login' });
-    } else if (to.meta.role && to.meta.role !== userRole) {
-      next({ name: 'Login' });
-    } else {
-      next();
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/',
+      name: 'Landing',
+      component: LandingView
     }
-  } else {
-    next();
-  }
+  ]
 })
-
-export default router;
-
-// import { createRouter, createWebHistory } from 'vue-router';
-// import LoginView from '../views/LoginView.vue';
-// import ExaminerView from '../views/ExaminerView.vue';
-// import SupervisorView from '../views/SupervisorView.vue';
 
 // const routes = [
-//   { path: '/', component: LoginView },
-//   { path: '/examiner', component: ExaminerView },
-//   { path: '/supervisor', component: SupervisorView },
-// ];
+//   {
+//     path: '/',
+//     name: 'Landing',
+//     component: LandingView
+//   }
+// ]
 
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes,
-// });
 
-// export default router;
+// const routes = [
+//   {
+//     path: '/',
+//     name: 'Login',
+//     component: LoginView
+//   },
+//   {
+//     path: '/examiner',
+//     name: 'Examiner',
+//     component: ExaminerView,
+//     meta: { requiresAuth: true, role: 'pemeriksa' }
+//   },
+//   {
+//     path: '/supervisor',
+//     name: 'Supervisor',
+//     component: SupervisorView,
+//     meta: { requiresAuth: true, role: 'atasan' }
+//   }
+// ]
+
+// const router = new Router({
+//   mode: 'history',
+//   base: process.env.BASE_URL,
+//   routes
+// })
+
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = false; // Replace with actual authentication check
+//   const userRole = ''; // Replace with actual user role
+
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (!isAuthenticated) {
+//       next({ name: 'Login' });
+//     } else if (to.meta.role && to.meta.role !== userRole) {
+//       next({ name: 'Login' });
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// })
+
+export default router;
