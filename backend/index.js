@@ -8,86 +8,84 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const cors = require('cors');
+app.use(cors());
+
+const bcrypt = require('bcryptjs');
+const saltRounds = 18;
+
+
 // Middleware
 
 
 // basic routing
 app.get('/', (req, res) => {
-  res.send('Berhasil terhubung ke server backend!');
+  res.send('Hello World! This is the backend server.');
+});
+
+// login route
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE username = ?';
+  db.get(sql, [username], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!row) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    bcrypt.compare(password, row.password, (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (!result) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      // On successful login, send dashboard URL for this user id
+      res.json({ 
+        message: 'Login successful', 
+        user: { id: row.id, username: row.username, nama: row.nama },
+        redirect: `/dashboard/${row.id}`
+      });
+    });
+  });
+});
+
+// route untuk dashboard user
+app.get('/dashboard/:id', (req, res) => {
+  const userId = req.params.id;
+  const sql = 'SELECT * FROM users WHERE id = ?';
+  db.get(sql, [userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!row) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ user: row });
+  });
 });
 
 
-// const sqlite3 = require('sqlite3').verbose();
-// const cors = require('cors');
 
-// app.use(express.json()); // Untuk parsing JSON body dari request
-// app.use(cors()); // Mengaktifkan CORS
+// ambil daftar user
+app.get('/user', (req, res) => {
+  const sql = 'SELECT username, UPPER(nama) nama, fotolink FROM users ORDER BY id';
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({
+      status: 'Berhasil terhubung ke server backend!',
+      users: rows}
+    );
+  });
 
-// // Inisialisasi Database SQLite
-// const db = new sqlite3.Database('./database.db', (err) => {
-//   if (err) {
-//     console.error('Error opening database:', err.message);
-//   } else {
-//     console.log('Connected to the SQLite database.');
-//     // Membuat tabel 'items' jika belum ada
-//     db.run(`CREATE TABLE IF NOT EXISTS items (
-//       id INTEGER PRIMARY KEY AUTOINCREMENT,
-//       name TEXT NOT NULL,
-//       description TEXT
-//     )`, (err) => {
-//       if (err) {
-//         console.error('Error creating table:', err.message);
-//       }
-//     });
-//   }
-// });
+  console.log("Ada Permintaan dari Front End")
+});
 
-// // Endpoint API
 
-// // 1. GET: Mendapatkan semua item
-// app.get('/api/items', (req, res) => {
-//   db.all('SELECT * FROM items', (err, rows) => {
-//     if (err) {
-//       res.status(500).json({ error: err.message });
-//       return;
-//     }
-//     res.json({ data: rows });
-//   });
-// });
 
-// // 2. POST: Menambah item baru
-// app.post('/api/items', (req, res) => {
-//   const { name, description } = req.body;
-//   if (!name) {
-//     res.status(400).json({ error: 'Name is required' });
-//     return;
-//   }
-//   const stmt = db.prepare('INSERT INTO items (name, description) VALUES (?, ?)');
-//   stmt.run(name, description, function (err) {
-//     if (err) {
-//       res.status(500).json({ error: err.message });
-//       return;
-//     }
-//     res.status(201).json({ id: this.lastID, name, description });
-//   });
-//   stmt.finalize();
-// });
-
-// // 3. DELETE: Menghapus item
-// app.delete('/api/items/:id', (req, res) => {
-//   const { id } = req.params;
-//   db.run('DELETE FROM items WHERE id = ?', id, function (err) {
-//     if (err) {
-//       res.status(500).json({ error: err.message });
-//       return;
-//     }
-//     if (this.changes === 0) {
-//       res.status(404).json({ message: 'Item not found' });
-//     } else {
-//       res.json({ message: 'Item deleted successfully' });
-//     }
-//   });
-// });
 
 // Mulai server
 app.listen(port, () => {
