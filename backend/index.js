@@ -52,17 +52,27 @@ app.post('/login', (req, res) => {
 });
 
 // route untuk dashboard user
-app.get('/dashboard/:id', (req, res) => {
-  const userId = req.params.id;
-  const sql = 'SELECT * FROM users WHERE id = ?';
-  db.get(sql, [userId], (err, row) => {
+app.get('/dashboard/:nama', (req, res) => {
+  const userId = req.params.nama;
+  const sql = `SELECT AA.id_tugas, DD.perihalst,
+  BB.id AS id_penilai, AA.penilai AS nama_penilai,
+  CC.id AS id_dinilai, AA.dinilai AS nama_dinilai 
+  FROM (SELECT id_tugas, penilai, dinilai 
+  FROM penilaian 
+  WHERE penilai = ?) AS AA
+  LEFT JOIN users AS BB ON AA.penilai = BB.nama
+  LEFT JOIN users AS CC ON AA.dinilai = CC.nama
+  LEFT JOIN (SELECT id_tugas, perihalst FROM penugasan GROUP BY id_tugas, perihalst) AS DD ON AA.id_tugas = DD.id_tugas
+  `;
+  db.all(sql, [userId], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    if (!row) {
+    if (!rows) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.json({ user: row });
+    res.json({ data: rows });
+  
   });
 });
 
