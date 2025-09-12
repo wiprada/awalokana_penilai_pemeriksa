@@ -70,7 +70,7 @@ app.get('/dashboard/:id', (req, res) => {
 
 // ambil daftar user
 app.get('/user', (req, res) => {
-  const sql = 'SELECT username, UPPER(nama) nama, fotolink FROM users ORDER BY id';
+  const sql = 'SELECT * FROM users ORDER BY id';
   db.all(sql, [], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
