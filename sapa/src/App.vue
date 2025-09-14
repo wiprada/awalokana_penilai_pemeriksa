@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar app dark small color="purple-darken-4">
+    <v-toolbar app dark small color="purple-darken-4" wrap>
       <v-toolbar-title>
         <v-icon>
           mdi-rocket
