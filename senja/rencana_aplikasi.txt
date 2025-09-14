@@ -1,0 +1,29 @@
+Halaman yang perlu dibuat
+
+[semua]
+Login
+
+[untuk pemeriksa]
+dashboard_pribadi
+--nilai_pribadi
+--monitoring_penilaian
+--monitoring_pengetahuan
+menilai
+mengusulkan_pengetahuan
+
+[admin]
+monitoring_user
+--reset_password
+--tambah_user
+--ubah_status_user
+monitoring_pemeriksa
+--tambah_pemeriksa
+monitoring_pengetahuan
+--reset 
+--ubah_status
+tambah_penilaian (baca_excel)
+
+[atasan]
+monitoring_nilai_pemeriksa
+monitoring_penilaian_pemeriksa
+mengusulkan_pengetahuan_pemeriksa
