@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar app dark color="purple-darken-4">
+    <v-toolbar app dark small color="purple-darken-4">
       <v-toolbar-title>
         <v-icon>
           mdi-rocket
         </v-icon>
-        Sapa
+        SAPA Pemeriksa
       </v-toolbar-title>
       <v-spacer/>
       <v-btn text to="/">
@@ -19,11 +19,6 @@
           mdi-view-dashboard
         </v-icon>
         Dashboard</v-btn>
-      <v-btn text to="/login">
-        <v-icon>
-          mdi-login
-        </v-icon>
-        Login</v-btn>
       <v-btn text to="/logout">
         <v-icon>
           mdi-logout
