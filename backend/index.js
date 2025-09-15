@@ -1,171 +1,124 @@
 const express = require('express');
-const app = express();
-const port = 3000;
-
-const db = require('./koneksi');
-
+const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const bcrypt = require('bcryptjs');
 
+const app = express();
+const db = new sqlite3.Database('./database.db');
+
+app.use(bodyParser.json());
+
+// using cors for cross-origin requests
 const cors = require('cors');
 app.use(cors());
 
-const bcrypt = require('bcryptjs');
-const e = require('express');
-const saltRounds = 18;
-
-
-// Middleware
-
-
-// basic routing
-app.get('/', (req, res) => {
-  res.send('Hello World! This is the backend server.');
-});
-
-// login route
-app.post('/login', (req, res) => {
-  // menerima data dari isian formulir login di frontend data yang diterima adalah email dan password
-  const { email, password } = req.body;
-
-  const { email, password } = req.body;
-  const sql = 'SELECT * FROM users WHERE email = ?';
-  db.get(sql, [email], (err, row) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    if (!row) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    bcrypt.compare(password, row.password, (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      if (!result) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-      // On successful login, send dashboard URL for this user id
-      // add if based on user role
-      if (row.role === 'Admin') {
-        return res.json({ 
-          message: 'Login successful', 
-          user: { id: row.id, nama: row.nama },
-          redirect: '/admin'
-        });
-      } else if (row.role === 'Struktural') {
-        return res.json({ 
-          message: 'Login successful', 
-          user: { id: row.id, nama: row.nama, grup: row.grup },
-          redirect: `/struktural/${row.grup}`
-        });
-      } else if (row.role === 'Fungsional Pemeriksa') {
-        return res.json({ 
-          message: 'Login successful', 
-          user: { id: row.id, nama: row.nama, grup: row.grup, foto: row.fotolink },
-          redirect: `/dashboard/${row.id}`
-        });
-      }
+// --- Helper: Query wrapper ---
+function dbGet(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row)));
+  });
+}
+function dbAll(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows)));
+  });
+}
+function dbRun(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) reject(err);
+      else resolve(this);
     });
   });
+}
+
+// --- Endpoint: Login ---
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
+    const user = await dbGet('SELECT * FROM users WHERE username = ?', [email]);
+    if (!user || !user.password) {
+      return res.status(401).json({ message: 'Invalid credentials User' });
+    }
+    console.log('User found:', user);
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(401).json({ message: 'Invalid credentials Password' });
+    res.json({ message: 'Login successful', hasil: user });
+    // add forking logic based on role if admin to admin dashoard if struktural to struktural dashoboard based on user.grup else dashboard
+    if (user.role === 'admin') {
+      // Redirect to admin dashboard
+      res.json({ message: 'Redirecting to admin dashboard', hasil: user, redirect: '/admin' });
+    } else if (user.role === 'struktur') {
+      // Redirect to struktural dashboard
+      res.json({ message: 'Redirecting to struktural dashboard', hasil: user, redirect: `/struktural/${user.grup}` });
+    } else {
+      // Redirect to general dashboard
+      res.json({ message: 'Redirecting to general dashboard', hasil: user, redirect: `/dashboard/${user.id}` });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// endpoint admin ambil data user
-app.get('/admin', (req, res) => {
-  const {nama} = req.body;
-  const sql = 'SELECT * FROM users ORDER BY id';
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({
-      status: ` ${nama} Berhasil terhubung ke Data Admin!`,
-      users: rows
-    });
-  });
-
-  console.log("Ada Permintaan dari Front End")
-  // Tambahkan logika tambahan jika diperlukan
+// --- Endpoint: Reset User Password ---
+app.post('/reset-password', async (req, res) => {
+  const { userId, newPassword } = req.body;
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await dbRun('UPDATE users SET password_hash = ? WHERE id = ?', [hashedPassword, userId]);
+    res.json({ message: 'Password reset successful' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// endpoint struktural
-app.get('/struktural/:grup', (req, res) => {
-  const grup = req.params.grup;
-  const sql = 'SELECT * FROM users WHERE grup = ? ORDER BY id';
-  db.all(sql, [grup], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({
-      status: `Berhasil terhubung ke Data Struktural untuk grup ${grup}!`,
-      users: rows}
+// --- Endpoint: admin dashboard ---
+
+// --- Endpoint: Get all knowledge management info ---
+app.get('/knowledge', async (req, res) => {
+  try {
+    const rows = await dbAll('SELECT * FROM usulan_pengetahuan');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Endpoint: Add knowledge management info ---
+app.post('/knowledge', async (req, res) => {
+  const { title, content, status } = req.body;
+  try {
+    const result = await dbRun(
+      'INSERT INTO usulan_pengetahuan (title, content, status) VALUES (?, ?, ?)',
+      [title, content, status]
     );
-  });
+    res.json({ message: 'Added', id: result.lastID });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// route untuk dashboard user
-app.get('/dashboard/:nama', (req, res) => {
-  const userId = req.params.nama;
-  const sql = `SELECT AA.id_tugas, DD.perihalst,
-  BB.id AS id_penilai, AA.penilai AS nama_penilai,
-  CC.id AS id_dinilai, AA.dinilai AS nama_dinilai 
-  FROM (SELECT id_tugas, penilai, dinilai 
-  FROM penilaian 
-  WHERE penilai = ?) AS AA
-  LEFT JOIN users AS BB ON AA.penilai = BB.nama
-  LEFT JOIN users AS CC ON AA.dinilai = CC.nama
-  LEFT JOIN (SELECT id_tugas, perihalst FROM penugasan GROUP BY id_tugas, perihalst) AS DD ON AA.id_tugas = DD.id_tugas
-  `;
-  db.all(sql, [userId], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    if (!rows) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json({ data: rows });
-  
-  });
+// --- Endpoint: Update status of knowledge management info ---
+app.put('/knowledge/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const parsedId = parseInt(id, 10);
+  if (isNaN(parsedId)) {
+    return res.status(400).json({ error: 'Invalid ID parameter' });
+  }
+  try {
+    await dbRun('UPDATE usulan_pengetahuan SET status = ? WHERE id = ?', [status, parsedId]);
+    res.json({ message: 'Status updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-
-
-// ambil daftar user
-app.get('/user', (req, res) => {
-  const sql = 'SELECT * FROM users ORDER BY id';
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({
-      status: 'Berhasil terhubung ke server backend!',
-      users: rows}
-    );
-  });
-
-  console.log("Ada Permintaan dari Front End")
-});
-
-// mengambil usulan berbagi pengetahuan
-app.get('/pengetahuan', (req, res) => {
-  const sql = `
-  SELECT *
-  FROM usulan_pengetahuan
-  `;
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      return res.json({error: err.message});
-    }
-    res.json({
-      status: 'Berhasil Mengambil Data Pengetahuan',
-      hasil: rows
-    })
-  })
-  console.log('Ada Permintaan dari FrontEnd')
-});
-
-
-// Mulai server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+// --- Start server ---
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

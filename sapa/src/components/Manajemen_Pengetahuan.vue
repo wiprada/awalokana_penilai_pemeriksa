@@ -30,7 +30,7 @@ data() {
 methods: {
   async fetchData() {
     try {
-      const response = await axios.get('http://localhost:3000/pengetahuan');
+      const response = await axios.get('http://localhost:3000/knowledge');
       // Adjust this if your API returns an array directly or inside a property
       this.pengetahuan = Array.isArray(response.data)
         ? response.data

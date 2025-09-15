@@ -83,7 +83,7 @@ export default defineComponent({
             .then(response => {
                 console.log(response.data);
                 // Simpan data user ke localStorage atau state management
-                localStorage.setItem('user', JSON.stringify(response.data.user));
+                // localStorage.setItem('user', JSON.stringify(response.data.user));
                 // Arahkan ke halaman dashboard sesuai role
                 this.$router.push(response.data.redirect);
             })

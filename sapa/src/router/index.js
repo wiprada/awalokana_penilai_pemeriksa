@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '@/views/DashboardView.vue'
 import DashboardAdmin from '@/views/DashboardAdmin.vue'
+import DashboardStruktural from '@/views/DashboardStruktural.vue'
 import LoginView from '@/views/LoginView'
 
 const routes = [
@@ -10,13 +11,18 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/dashboard',
+    path: '/dashboard/:nama',
     name: 'dashboard',
     component: DashboardView
   },
   {
-    path: '/dashboardAdmin',
-    name: 'dashboardAdmin',
+    path: '/struktural/:grup',
+    name: 'struktural',
+    component: DashboardStruktural
+  },
+  {
+    path: '/admin',
+    name: 'admin',
     component: DashboardAdmin
   },
   {
