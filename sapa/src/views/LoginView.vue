@@ -42,8 +42,7 @@
                 </v-sheet>
             </v-col>
             <v-col cols="8">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam commodi aliquam suscipit earum non quam illo, voluptate fugiat dolores nobis. Iste id doloribus deleniti autem impedit maiores dolores distinctio alias.</p>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam commodi aliquam suscipit earum non quam illo, voluptate fugiat dolores nobis. Iste id doloribus deleniti autem impedit maiores dolores distinctio alias.</p>
+                <usulan-pengetahuan />
             </v-col>
 
         </v-row>
@@ -51,7 +50,11 @@
     </v-container>
 </template>
 <script>
-import { defineComponent} from 'vue';
+import { defineComponent } from 'vue';
+import axios from 'axios';
+
+// mengambil component
+import UsulanPengetahuan from '@/components/Manajemen_Pengetahuan'
 
 
 export default defineComponent({
@@ -75,18 +78,27 @@ export default defineComponent({
     },
     methods: {
         handleSubmit() {
-            console.log('Data Direkam: ', this.user);
-
-            this.user = {
-                email: '',
-                password: ''
-            }
+            // mengirim isian form ke backend login
+            axios.post('http://localhost:3000/login', this.user)
+            .then(response => {
+                console.log(response.data);
+                // Simpan data user ke localStorage atau state management
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                // Arahkan ke halaman dashboard sesuai role
+                this.$router.push(response.data.redirect);
+            })
+            // jika berhasil di backend maka diarahkan ke halaman dashsboard sesuai role
         },
         gantiPassword() {
             //
-        }
+        },
+        
     },
+    components: {
+        UsulanPengetahuan
+    }
 });
+
 </script>
 <style>
     
