@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar dense prominent extended>
+  <v-toolbar class="bg-red">
     <v-toolbar-title>Admin Dashboard</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn text to="/" @click="logout">Logout</v-btn>

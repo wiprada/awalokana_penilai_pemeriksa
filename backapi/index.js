@@ -58,6 +58,16 @@ app.post('/login', (req, res) => {
     });
 });
 
+// endpoint: usulan_pengetahuan
+app.get('/pengetahuan', (req, res) => {
+    const query = 'SELECT * FROM usulan_pengetahuan';
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json(rows);
+    });
+});
 
 // Start the server
 app.listen(PORT, () => {
