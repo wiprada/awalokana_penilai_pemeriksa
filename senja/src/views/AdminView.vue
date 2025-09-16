@@ -1,18 +1,18 @@
 <template>
-  <v-toolbar class="bg-red">
+  <v-toolbar class="bg-purple">
     <v-toolbar-title>Admin Dashboard</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn text to="/" @click="logout">Logout</v-btn>
   </v-toolbar>
   <v-container grid-list-xs>
     <v-row>
-      <v-col cols="4" >
+      <v-col cols="4" class="bg-purple-darken-1">
         <AdminUser />
       </v-col>
-      <v-col cols="4" >
+      <v-col cols="4" class="bg-purple-darken-2">
         <AdminTugas />
       </v-col>
-      <v-col cols="4" >
+      <v-col cols="4" class="bg-purple-darken-3">
         <AdminUsulan />
       </v-col>
     </v-row>

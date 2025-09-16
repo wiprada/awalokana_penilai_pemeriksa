@@ -1,6 +1,6 @@
-<template lang="">
-    <v-toolbar>
-    <v-toolbar-title>Dashboard</v-toolbar-title>
+<template>
+    <v-toolbar class="bg-green-darken-2">
+    <v-toolbar-title>Dashboard Pemeriksa </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn text to="/" @click="logout">Logout</v-btn>
   </v-toolbar>
@@ -40,6 +40,6 @@ export default {
     }
 }
 </script>
-<style lang="">
+<style>
     
 </style>

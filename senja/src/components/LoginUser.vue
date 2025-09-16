@@ -49,6 +49,9 @@ export default {
                 localStorage.setItem('authToken', token);
                 const userRole = response.data.role;
                 localStorage.setItem('userRole', userRole);
+                const nama = response.data.nama;
+                localStorage.setItem('nama', nama);
+                localStorage.setItem('username', this.username);
 
                 // Cek role dan arahkan ke halaman yang sesuai
                 if (userRole === 'admin') {
