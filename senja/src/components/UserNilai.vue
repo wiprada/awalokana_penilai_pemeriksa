@@ -1,7 +1,7 @@
 <template>
-    <v-container >
+    <v-container class="text-center" grid-list-sm>
         <h2>Evaluasi Personal </h2>
-        <v-row>
+        <v-row justify="center">
             <v-card class="ma-4">
                 <v-img
                     height="200px"
@@ -16,8 +16,95 @@
 
             </v-card>
         </v-row>
-        <v-row>
-            <p> lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <v-row d-flex grid-list-xs>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.perencanaan) }"
+            >
+                Perencanaan:
+                <br>
+                {{ Number(nilai.perencanaan).toFixed(2) }}
+            </v-col>
+            <v-col cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.pelaksanaan) }"
+            >
+                Pelaksanaan:
+                <br>
+                {{ Number(nilai.pelaksanaan).toFixed(2) }}
+            </v-col>
+            <v-col cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.pelaporan) }"
+            >
+                Pelaporan:
+                <br>
+                {{ Number(nilai.pelaporan).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.pelayanan) }"
+            >
+                Pelayanan:
+                <br>
+                {{ Number(nilai.pelayanan).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.akuntabel) }"
+            >
+                Akuntabel:
+                <br>
+                {{ Number(nilai.akuntabel).toFixed(2) }}
+            </v-col>
+            <v-col cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.kompeten) }"
+            >
+                Kompeten:
+                <br>
+                {{ Number(nilai.kompeten).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.harmonis) }"
+            >
+                Harmonisasi:
+                <br>
+                {{ Number(nilai.harmonis).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.loyalitas) }"
+            >
+                Loyalitas:
+                <br>
+                {{ Number(nilai.loyalitas).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.adaptif) }"
+            >
+                Adaptif:
+                <br>
+                {{ Number(nilai.adaptif).toFixed(2) }}
+            </v-col>
+            <v-col
+                cols="3"
+                class="text-center"
+                :style="{ backgroundColor: getBgColor(nilai.kolaboratif) }"
+            >
+                Kolaboratif:
+                <br>
+                {{ Number(nilai.kolaboratif).toFixed(2) }}
+            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -30,7 +117,8 @@ export default {
     name: 'UserNilai',
     data() {
         return {
-            user: {}
+            user: {},
+            nilai: {}
         }
     },
     methods: {
@@ -50,11 +138,11 @@ export default {
             }
         },
         nilaiUser() {
-            const username = localStorage.getItem('nama');
-            if (username) {
-                axios.get(`/api/nilai/${username}`)
+            const nama = localStorage.getItem('nama');
+            if (nama) {
+                axios.get(`/api/nilai/${nama}`)
                     .then(response => {
-                        this.user = response.data;
+                        this.nilai = response.data[0];
                     })
                     .catch(error => {
                         console.error('Error fetching user data:', error);
@@ -62,6 +150,12 @@ export default {
             } else {
                 console.log('Tidak ada username ditemukan.');
             }
+        },
+        getBgColor(value) {
+            // Example: return a color based on value, adjust as needed
+            if (value >= 2) return '#C8E6C9'; // green for high scores
+            return '#FFCDD2'; // red for low scores
+            
         }
     },
     mounted() {

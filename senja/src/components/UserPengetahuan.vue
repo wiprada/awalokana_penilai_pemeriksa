@@ -2,10 +2,27 @@
     <v-container>
         <v-list>
             <v-list-item v-for="item in pengetahuanList" :key="item.id">
-                <v-list-item-content>
-                    <v-card outlined class="mb-4">
-                        <v-card-title class="headline"> Narasumber: {{ item.narasumber }}</v-card-title>
-                        <v-card-text>{{ item.pengetahuan }}</v-card-text>
+                <v-list-item-content class="d-flex">
+                    <v-card outlined class="pa-3 mb-2 d-flex w-100">
+                        <v-row class="w-100">
+                            <v-col cols="3">
+                                Narasumber: <br>
+                                {{ item.narasumber }}
+                            </v-col>
+                            <v-col cols="6">
+                                Pengetahuan: <br>
+                                {{ item.pengetahuan }}
+                            </v-col>
+                            <v-col cols="1">
+                                vote: <br>
+                                {{ item.vote }}
+                            </v-col>
+                            <v-col cols="2">
+                                <v-btn color="success" @click="vote(item.id)">
+                                    <v-icon class="ma-2">mdi-thumb-up</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </v-card>
                 </v-list-item-content>
             </v-list-item>
@@ -14,6 +31,7 @@
 </template>
 <script>
 import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:3000/';
 
 export default {
     name: 'UserPengetahuan',
@@ -24,15 +42,33 @@ export default {
     },
     methods: {
         fetchPengetahuan() {
-            axios.get('http://localhost:3000/pengetahuan')
+            axios.get('/pengetahuan')
                 .then(response => {
                     console.log(response.data);
                     this.pengetahuanList = response.data;
+                    // Emit an event to notify parent components that pengetahuan data has been fetched and updated
                     this.$emit('pengetahuanFetched', this.pengetahuanList);
                 })
                 .catch(error => {
                     console.error('Error fetching pengetahuan data:', error);
                 });
+
+        },
+        
+        async vote(id) {
+            const voter = localStorage.getItem('username');
+            try {
+                // Combine vote and voter recording in a single API call if possible
+                const response = await axios.post('/pengetahuan/vote', { 
+                    id: Number(id),
+                    voter
+                });
+                if (response.status === 200) {
+                    this.fetchPengetahuan(); // Refresh the list after voting
+                }
+            } catch (error) {
+                console.error('Error voting dan mencatat voter pengetahuan:', error);
+            }
         }
     },
     mounted() {
@@ -40,6 +76,3 @@ export default {
     }
 }
 </script>
-<style>
-    
-</style>
