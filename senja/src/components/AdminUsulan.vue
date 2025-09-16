@@ -1,7 +1,6 @@
 <template lang="">
     <div>
         <h2>Manajemen Pengetahuan</h2>
-        <p>Welcome to the manajemen pengetahuan page!</p>
         <v-list>
             <v-list-item
                 v-for="item in usulan"
@@ -50,7 +49,8 @@ export default {
         },
         async selesai(item_id) {
             try {
-                const response = await axios.patch('/pengetahuan/selesai', { id: item_id });
+                const by = localStorage.getItem('nama');
+                const response = await axios.patch('/pengetahuan/selesai', { id: item_id , by: by });
                 if (response.status === 200) {
                     console.log('Usulan sudah selesai:', response.data);
                     this.fetchUsulan(); // Refresh the list after deletion

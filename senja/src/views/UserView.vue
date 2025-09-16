@@ -1,6 +1,6 @@
 <template>
     <v-toolbar class="bg-green-darken-4">
-    <v-toolbar-title>Dashboard Pemeriksa </v-toolbar-title>
+    <v-toolbar-title>Dashboard </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn variant="text" to="/" @click="logout">Logout</v-btn>
   </v-toolbar>
@@ -64,6 +64,10 @@ export default {
     methods: {
         logout() {
             localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('grup');
+            localStorage.removeItem('nama');
+            localStorage.removeItem('username');
             this.$router.push('/');
         },
         async usulkanPengetahuan() {

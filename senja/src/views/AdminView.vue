@@ -40,6 +40,10 @@ export default defineComponent({
   methods: {
     logout() {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('grup');
+      localStorage.removeItem('nama');
+      localStorage.removeItem('username');
       this.$router.push('/');
     }
   }

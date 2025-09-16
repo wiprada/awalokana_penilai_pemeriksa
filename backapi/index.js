@@ -49,14 +49,64 @@ app.post('/login', (req, res) => {
             const token = jwt.sign(
                 { id: row.id, username: row.username },
                 JWT_SECRET,
-                { expiresIn: '1h' }
+                { expiresIn: '2h' }
             );
 
             // Successful login
-            res.json({ message: 'Login successful', user: row, token, role: row.role, nama: row.nama });
+            res.status(200).json({ message: 'Login successful', user: row, token, role: row.role, nama: row.nama, grup: row.grup, id: row.id});
         });
     });
 });
+
+// --- ADMIN ---
+
+// endpoint: usulan_pengetahuan selesai
+app.patch('/pengetahuan/selesai', (req, res) => {
+    const { id, by } = req.body;
+    if (!id) {
+        return res.status(400).json({ message: 'ID is required' });
+    }
+    const query = 'UPDATE usulan_pengetahuan SET status = 1, doneby = ? WHERE id = ?';
+    db.run(query, [by, id], function (err) {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.status(200).json({ message: 'Usulan sudah selesai', id });
+    });
+});
+
+// endpoint: mengambil seluruh data user
+app.get('/api/users', (_, res) => {
+    const query = 'SELECT id, username, nama, nip, fotolink, grup FROM users ORDER BY id'; // Exclude password from the response
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json(rows);
+    });
+});
+
+
+
+// endpoint: mengambil seluruh data tugas
+app.get('/api/tugas', (_, res) => {
+    const query = `
+    SELECT * 
+    FROM surat_tugas 
+    ORDER BY tglst, id_st`;
+    
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json(rows);
+    });
+});
+
+
+
+
+// --- ENDPOINT USER ---
 
 // endpoint: usulan_pengetahuan
 app.get('/pengetahuan', (req, res) => {
@@ -111,58 +161,6 @@ app.post('/pengetahuan/vote', (req, res) => {
     });
 });
 
-// endpoint: usulan_pengetahuan selesai
-app.patch('/pengetahuan/selesai', (req, res) => {
-    const { id } = req.body;
-    if (!id) {
-        return res.status(400).json({ message: 'ID is required' });
-    }
-    const query = 'UPDATE usulan_pengetahuan SET status = 1 WHERE id = ?';
-    db.run(query, [id], function (err) {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-        res.status(200).json({ message: 'Usulan sudah selesai', id });
-    });
-});
-
-// endpoint: mengambil seluruh data user
-app.get('/api/users', (_, res) => {
-    const query = 'SELECT id, username, nama, nip, fotolink, grup FROM users ORDER BY id'; // Exclude password from the response
-    db.all(query, [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-        res.json(rows);
-    });
-});
-
-// endpoint: mengambil data pegawai 
-app.get('/api/pegawai', (_, res) => {
-    const query = `
-    select nama
-    FROM data_pegawai
-    WHERE aktifpeg = 'Aktif'
-    ORDER BY id`;
-    db.all(query, [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-        res.json(rows);
-    });
-});
-
-// endpoint: mengambil seluruh data tugas
-app.get('/api/tugas', (_, res) => {
-    const query = 'SELECT * FROM surat_tugas ORDER BY tglst, id';
-    db.all(query, [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-        res.json(rows);
-    });
-});
-
 // endpoint: mengambil user tertentu berdasarkan username
 app.get('/api/user/:username', (req, res) => {
     const username = req.params.username;
@@ -212,30 +210,137 @@ app.get('/api/nilai/:nama', (req, res) => {
     });
 });
 
-// endpoint: mengambil tugas penilaian berdasarkan nama
-app.get('/api/tugas/:penilai', (req, res) => {
-    const penilai = req.params.penilai;
+
+// endpoint: mengambil tugas penilaian berdasarkan id_penilai
+app.get('/api/tugas/:id_penilai', (req, res) => {
+    const id_penilai = req.params.id_penilai;
 
     const query = `
-        SELECT AA.id_tugas, BB.perihalst, BB.entabr, AA.jumlah_dinilai, AA.sudah_dinilai
-        FROM (SELECT id_tugas, count(*) jumlah_dinilai, sum(status) sudah_dinilai
-        FROM penilaian
-        WHERE penilai = ?
-        group by id_tugas) AS AA 
-        LEFT JOIN surat_tugas AS BB ON AA.id_tugas = BB.id
+        SELECT BB.id_st, 
+        BB.no_st, 
+        BB.perihalst, 
+        BB.entabr, 
+        AA.jumlah_dinilai, 
+        AA.sudah_dinilai
+        FROM (SELECT 
+                id_tugas, 
+                count(*) jumlah_dinilai, 
+                sum(status) sudah_dinilai
+            FROM penilaian
+            WHERE id_penilai = ?
+            group by id_tugas) AS AA 
+        LEFT JOIN surat_tugas AS BB 
+        ON AA.id_tugas = BB.no_st
+        ORDER BY BB.id_st
     `
-    db.all(query, [penilai], (err, row) => {
+    db.all(query, [id_penilai], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        if (!rows || rows.length === 0) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(rows);
+    });
+});
+
+// endpoint: penilaian mengambil siapa saja yang harus dinilai
+app.get('/api/tugas/menilai/:id_penilai/:id_tugas', (req, res) => {
+    const { id_penilai, id_tugas } = req.params;
+    if (!id_penilai || !id_tugas) {
+        return res.status(400).json({ message: 'id_penilai and id_tugas are required' });
+    }
+
+    // Query to get the users who need to be evaluated
+    const query = `
+        SELECT st.id_st, 
+        st.entabr, 
+        p.id_penilai,
+        p.penilai,
+        p.id_dinilai,
+        p.dinilai,
+        u.fotolink
+        FROM penilaian p
+        LEFT JOIN surat_tugas st ON p.id_tugas = st.no_st 
+        LEFT JOIN users u ON p.id_dinilai = u.id
+        WHERE p.id_penilai = ?
+        AND st.id_st = ?
+    `;
+    db.all(query, [id_penilai, id_tugas], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.status(200).json(rows);
+    });
+});
+
+
+// ---ENDPOINT STRUKTURAL---
+
+// endpoint: nilai dari grup yang sama
+app.get('/api/staf/:grup', (req, res) => {
+    const grup = req.params.grup;
+    const query = `
+        SELECT BB.id, BB.nama,
+        AA.perencanaan,
+        AA.pelaksanaan,
+        AA.pelaporan,
+        AA.pelayanan,
+        AA.akuntabel,
+        AA.kompeten,
+        AA.harmoni,
+        AA.loyal,
+        AA.adaptif,
+        AA.kolaboratif 
+        FROM (SELECT id_dinilai, dinilai,
+        AVG(rik_renc) AS perencanaan, 
+        AVG(rik_laks) AS pelaksanaan, 
+        AVG(rik_lap) AS pelaporan, 
+        AVG(pelayanan) AS pelayanan, 
+        AVG(akuntabel) AS akuntabel, 
+        AVG(kompeten) AS kompeten, 
+        AVG(harmoni) AS harmoni, 
+        AVG(loyal) AS loyal, 
+        AVG(adaptif) AS adaptif, 
+        AVG(kolaboratif) AS kolaboratif
+        FROM penilaian
+        GROUP BY id_dinilai, dinilai) AS AA
+        INNER JOIN (SELECT id, nama
+        FROM users
+        WHERE grup = ?) AS BB ON AA.id_dinilai = BB.id
+        ORDER BY BB.id 
+    `;
+    db.all(query, [grup], (err, row) => {
         if (err) {
             return res.status(500).json({ message: 'Internal server error' });
         }
         if (!row) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.json(row);
+        res.status(200).json({
+            pesan: "Berhasil Mengambil data Nilai",
+            hasil: row
+        });
     });
 });
 
-        
+
+// --- ALAT BANTU ---
+
+// endpoint: mengambil data pegawai 
+app.get('/api/pegawai', (_, res) => {
+    const query = `
+    select nama
+    FROM data_pegawai
+    WHERE aktifpeg = 'Aktif'
+    ORDER BY id`;
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json(rows);
+    });
+});
 
 // Start the server
 app.listen(PORT, () => {

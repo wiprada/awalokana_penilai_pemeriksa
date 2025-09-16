@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import AdminView from '../views/AdminView.vue'
+import StrukturalView from '../views/StrukturalView.vue'
 import UserView from '../views/UserView.vue'
-
+import PenilaianView from '@/views/PenilaianView.vue'
 
 const routes = [
   {
@@ -17,7 +18,19 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
-    path: '/user',
+    path: '/struktural/:grup',
+    name: 'struktural',
+    component: StrukturalView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/penilaian/:id_penilai/:id_st',
+    name: 'penilaian',
+    component: PenilaianView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/user/:nama',
     name: 'user',
     component: UserView,
     meta: { requiresAuth: true }
