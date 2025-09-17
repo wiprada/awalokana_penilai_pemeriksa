@@ -111,16 +111,40 @@ app.get('/api/tugas', (_, res) => {
 // endpoint: usulan_pengetahuan
 app.get('/pengetahuan', (req, res) => {
     const query = `
-    SELECT * 
-    FROM usulan_pengetahuan 
-    WHERE status = 0 
-    ORDER BY vote DESC`;
+    SELECT up.id, up.narasumber, up.pengetahuan, u.vote
+    FROM usulan_pengetahuan up
+    LEFT JOIN (SELECT id_pengetahuan, count(*) vote 
+    FROM user_vote
+    GROUP BY id_pengetahuan) u ON up.id = u.id_pengetahuan 
+    WHERE up.status = 0
+    ORDER BY u.vote DESC
+    `;
 
     db.all(query, [], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Internal server error' });
         }
         res.json(rows);
+    });
+});
+
+// endpoint: untuk check apakah user sudah vote atau belum
+app.post('/pengetahuan/vote/check', (req, res) => {
+    const { id, voter } = req.body;
+    if (!id || !voter) {
+        return res.status(400).json({ message: 'ID and voter are required' });
+    }
+
+    const query = `
+    SELECT COUNT(*) as hasVoted
+    FROM user_vote
+    WHERE id_pengetahuan = ? AND voter = ?
+    `;
+    db.get(query, [id, voter], (err, row) => {
+        if (err) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.status(200).json({ hasVoted: row.hasVoted > 0 });
     });
 });
 
@@ -244,7 +268,7 @@ app.get('/api/tugas/:id_penilai', (req, res) => {
     });
 });
 
-// endpoint: penilaian mengambil siapa saja yang harus dinilai
+// endpoint: penilaian mengambil siapa saja yang harus dinilai 
 app.get('/api/tugas/menilai/:id_penilai/:id_tugas', (req, res) => {
     const { id_penilai, id_tugas } = req.params;
     if (!id_penilai || !id_tugas) {
@@ -254,12 +278,14 @@ app.get('/api/tugas/menilai/:id_penilai/:id_tugas', (req, res) => {
     // Query to get the users who need to be evaluated
     const query = `
         SELECT st.id_st, 
+        p.id_penilaian,
         st.entabr, 
         p.id_penilai,
         p.penilai,
         p.id_dinilai,
         p.dinilai,
-        u.fotolink
+        u.fotolink,
+        p.status
         FROM penilaian p
         LEFT JOIN surat_tugas st ON p.id_tugas = st.no_st 
         LEFT JOIN users u ON p.id_dinilai = u.id
@@ -274,6 +300,51 @@ app.get('/api/tugas/menilai/:id_penilai/:id_tugas', (req, res) => {
     });
 });
 
+// endpoint: penilaian simpan nilai
+app.patch('/api/penilaian', (req, res) => {
+    const { id_penilaian, NilaiPerencanaan, NilaiPelaksanaan, NilaiPelaporan, NilaiPelayanan, NilaiAkuntabel, NilaiKompeten, NilaiHarmonis, NilaiLoyalitas, NilaiAdaptif, NilaiKolaboratif, kualitatif } = req.body;
+
+    const query = `
+        UPDATE penilaian
+        SET rik_renc = ?,
+            rik_laks = ?,
+            rik_lap = ?,
+            pelayanan = ?,
+            akuntabel = ?,
+            kompeten = ?,
+            harmoni = ?,
+            loyal = ?,
+            adaptif = ?,
+            kolaboratif = ?,
+            kualitatif = ?,
+            status = 1
+        WHERE id_penilaian = ?
+    `;
+
+    db.run(
+        query,
+        [
+            Number(NilaiPerencanaan),
+            Number(NilaiPelaksanaan),
+            Number(NilaiPelaporan),
+            Number(NilaiPelayanan),
+            Number(NilaiAkuntabel),
+            Number(NilaiKompeten),
+            Number(NilaiHarmonis),
+            Number(NilaiLoyalitas),
+            Number(NilaiAdaptif),
+            Number(NilaiKolaboratif),
+            kualitatif,
+            Number(id_penilaian)
+        ],
+        function(err) {
+            if (err) {
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+            res.status(200).json({ message: 'Penilaian updated successfully' });
+        }
+    );
+});
 
 // ---ENDPOINT STRUKTURAL---
 

@@ -27,7 +27,8 @@ const routes = [
     path: '/penilaian/:id_penilai/:id_st',
     name: 'penilaian',
     component: PenilaianView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    props: true
   },
   {
     path: '/user/:nama',

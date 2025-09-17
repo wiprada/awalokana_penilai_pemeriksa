@@ -43,43 +43,43 @@
                 <td>{{ item.nama }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.perencanaan) }"
+                :style="{ backgroundColor: getBgColor(item.perencanaan), borderRadius: '50px' }"
                 >{{ Number(item.perencanaan).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.pelaksanaan) }"
+                :style="{ backgroundColor: getBgColor(item.pelaksanaan), borderRadius: '50px' }"
                 >{{ Number(item.pelaksanaan).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.pelaporan) }"
+                :style="{ backgroundColor: getBgColor(item.pelaporan), borderRadius: '50px' }"
                 >{{ Number(item.pelaporan).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.pelayanan) }"
+                :style="{ backgroundColor: getBgColor(item.pelayanan), borderRadius: '50px' }"
                 >{{ Number(item.pelayanan).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.akuntabel) }"
+                :style="{ backgroundColor: getBgColor(item.akuntabel), borderRadius: '50px' }"
                 >{{ Number(item.akuntabel).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.kompeten) }"
+                :style="{ backgroundColor: getBgColor(item.kompeten), borderRadius: '50px' }"
                 >{{ Number(item.kompeten).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.harmoni) }"
+                :style="{ backgroundColor: getBgColor(item.harmoni), borderRadius: '50px' }"
                 >{{ Number(item.harmoni).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.loyal) }"
+                :style="{ backgroundColor: getBgColor(item.loyal), borderRadius: '50px' }"
                 >{{ Number(item.loyal).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.adaptif) }"
+                :style="{ backgroundColor: getBgColor(item.adaptif), borderRadius: '50px' }"
                 >{{ Number(item.adaptif).toFixed(2) }}</td>
                 <td 
                 class="text-center"
-                :style="{ backgroundColor: getBgColor(item.kolaboratif) }"
+                :style="{ backgroundColor: getBgColor(item.kolaboratif), borderRadius: '50px' }"
                 >{{ Number(item.kolaboratif).toFixed(2) }}</td>
             </tr>
             </tbody>
@@ -125,10 +125,11 @@ export default {
         async downloadExcel() {
             if (!this.staf.length) return;
             const header = [
-                'Nama', 'Perencanaan', 'Pelaksanaan', 'Pelaporan', 'Pelayanan',
+                'NIP', 'Nama', 'Perencanaan', 'Pelaksanaan', 'Pelaporan', 'Pelayanan',
                 'Akuntabel', 'Kompeten', 'Harmoni', 'Loyalitas', 'Adaptif', 'Kolaboratif'
             ];
             const rows = this.staf.map(item => [
+                item.id,
                 item.nama,
                 Number(item.perencanaan).toFixed(2),
                 Number(item.pelaksanaan).toFixed(2),

@@ -71,8 +71,10 @@ export default {
         mulaiMenilai(id_st) {
             // Simpan id_tugas ke localStorage
             if (this.tugas.length > 0) {
-                // Arahkan ke halaman penilaian
-                this.router.push('/penilaian/' + String(localStorage.getItem('id')) + '/' + String(id_st));
+                // Buka halaman penilaian di tab baru
+                const id_penilai = String(localStorage.getItem('id'));
+                const url = `/penilaian/${id_penilai}/${id_st}`;
+                window.open(url, '_blank');
             } else {
                 console.error('Tidak ada tugas yang tersedia untuk dinilai.');
             }

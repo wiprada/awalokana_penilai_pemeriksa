@@ -18,7 +18,7 @@
                                 {{ item.vote }}
                             </v-col>
                             <v-col cols="2">
-                                <v-btn color="success" @click="vote(item.id)">
+                                <v-btn color="success" @click="vote(item.id)" :disabled="statusvote">
                                     <v-icon class="ma-2">mdi-thumb-up</v-icon>
                                 </v-btn>
                             </v-col>
@@ -37,7 +37,8 @@ export default {
     name: 'UserPengetahuan',
     data() {
         return {
-            pengetahuanList: []
+            pengetahuanList: [],
+            statusvote: false
         };
     },
     methods: {
@@ -68,6 +69,21 @@ export default {
                 }
             } catch (error) {
                 console.error('Error voting dan mencatat voter pengetahuan:', error);
+            }
+        },
+
+        async checkUserVote(id) {
+            const voter = localStorage.getItem('username');
+            try {
+                const response = await axios.post(`/pengetahuan/vote/check`, { 
+                    id: Number(id),
+                    voter
+                });
+                if (response.status === 200) {
+                    this.statusvote = true;
+                }
+            } catch (error) {
+                console.error('Error checking user vote status:', error);
             }
         }
     },
