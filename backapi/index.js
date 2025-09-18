@@ -128,6 +128,7 @@ app.get('/pengetahuan', (req, res) => {
     });
 });
 
+
 // endpoint: untuk check apakah user sudah vote atau belum
 app.post('/pengetahuan/vote/check', (req, res) => {
     const { id, voter } = req.body;
@@ -144,7 +145,10 @@ app.post('/pengetahuan/vote/check', (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Internal server error' });
         }
-        res.status(200).json({ hasVoted: row.hasVoted > 0 });
+        if (!row) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(row);
     });
 });
 
