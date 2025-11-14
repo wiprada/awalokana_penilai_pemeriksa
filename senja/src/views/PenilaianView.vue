@@ -58,7 +58,7 @@
                 <v-card-title >
                     <span class="text-h5">Form Penilaian Kinerja: {{ editedItem.dinilai }} {{ editedItem.id_dinilai }}</span>
                 </v-card-title>
-
+                
                 <v-card-text>
                     <v-container>
                         <v-row class="d-flex flex-wrap" justify-center>
