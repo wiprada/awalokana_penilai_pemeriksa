@@ -1,7 +1,7 @@
 <template>
   <div class="usulan-container">
     <div>
-      <h1>Usulan Berbagi Pengetahuan</h1>
+      <h1 class="align-center">Usulan Berbagi Pengetahuan</h1>
     </div>
     <table class="table table-striped">
       <thead>
@@ -63,7 +63,6 @@ export default {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
 }
 
 .table {
@@ -75,12 +74,13 @@ export default {
 .table td {
   padding: 12px 15px;
   text-align: left;
+  align-items: first baseline;
   border-bottom: 1px solid #dee2e6;
 }
 
 .table thead th {
-  background-color: #f8f9fa;
-  color: #495057;
+  align-content: center;
+  text-align: center;
   font-weight: 600;
 }
 

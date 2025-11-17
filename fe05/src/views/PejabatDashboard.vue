@@ -76,10 +76,11 @@ const signOut = () => {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 .user-dashboard {
   display: flex;
   flex-direction: column;
-  font-family: sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .dashboard-header {

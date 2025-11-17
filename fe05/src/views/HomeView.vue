@@ -1,22 +1,13 @@
 <template>
   <div class="container-fluid p-4">
-    <!-- Row 1: Header -->
-    <v-row> </v-row>
-
-    <!-- Row 2: Konten Utama -->
-    <v-row>
-      <v-col cols="4" class="bg-orange">
+    <v-row class="bg-background text-surface">
+      <v-col cols="4">
         <!-- Kolom 1: Komponen Login (Rasio 3) -->
-        <div class="row mb-4 align-items-center header-row">
-          <div class="col-md-12 text-center">
+        <div class="row ma-4 align-items-center bg-white rounded-lg">
+          <div class="col-md-12 text-center ma-4">
             <div class="align-center">
               <!-- Logo -->
-              <img
-                src="@/assets/logo.png"
-                alt="Logo"
-                class="logo me-3"
-                style="width: 35%; height: auto"
-              />
+              <img src="@/assets/logo.png" alt="Logo" class="logo w-100" />
             </div>
             <!-- Teks Pengantar -->
             <h1 x-large class="ma-5">
@@ -40,13 +31,13 @@
             <p>#jagadiri #jagawarga #jagaprofesionalitas</p>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 ma-4 rounded-lg">
           <Login />
         </div>
       </v-col>
-      <v-col class="bg-lime" cols="8">
+      <v-col cols="8">
         <!-- Kolom 2: Komponen Tabel (Rasio 9) -->
-        <div class="col-md-9">
+        <div class="col-md-9 text-warning">
           <UsulanPengetahuanTable />
         </div>
       </v-col>
@@ -60,34 +51,3 @@
 import Login from "@/components/LoginComponent.vue";
 import UsulanPengetahuanTable from "@/components/UsulanPengetahuanTable.vue";
 </script>
-
-<style scoped>
-/* Menggunakan class untuk styling agar tidak bertabrakan dengan style global */
-.container-fluid {
-  background-color: #f8f9fa;
-}
-
-.header-row {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-  height: 60px;
-  width: auto;
-}
-
-h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.lead {
-  font-size: 1rem;
-  color: #6c757d;
-  margin-bottom: 0;
-}
-</style>
