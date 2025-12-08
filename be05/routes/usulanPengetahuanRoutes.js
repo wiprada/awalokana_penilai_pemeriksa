@@ -19,7 +19,10 @@ router.get("/:id", usulanPengetahuanController.getUsulanPengetahuanById);
 router.post("/", usulanPengetahuanController.createUsulanPengetahuan);
 
 // UPDATE an usulan pengetahuan by ID
-router.patch("/:id", usulanPengetahuanController.updateUsulanPengetahuan);
+// router.patch("/:id", usulanPengetahuanController.updateUsulanPengetahuan);
+
+// UPDATE STATUS usulan pengetahuan by ID
+router.patch("/:id", usulanPengetahuanController.setDoneUsulanPengetahuan);
 
 // DELETE an usulan pengetahuan by ID
 router.delete("/:id", usulanPengetahuanController.deleteUsulanPengetahuan);

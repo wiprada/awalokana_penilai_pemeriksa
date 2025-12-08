@@ -14,7 +14,7 @@ const getAllPenilaian = async (req, res) => {
 const getPenilaianById = async (req, res) => {
   try {
     const id_dinilai = req.params.id_dinilai;
-    
+
     const result = await penilaian.getbyid(id_dinilai);
     res.status(200).json(result);
   } catch (error) {

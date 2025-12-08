@@ -13,7 +13,7 @@
         </h1>
       </div>
       <div class="header-right">
-        <button
+        <!-- <button
           @click="changePassword"
           class="change-password-button"
           aria-label="Ganti Password"
@@ -22,7 +22,14 @@
         </button>
         <button @click="signOut" class="signout-button" aria-label="Sign Out">
           <svg-icon type="mdi" :path="logoutIconPath"></svg-icon>
-        </button>
+        </button> -->
+        <v-spacer></v-spacer>
+        <v-btn icon @click="changePassword">
+          <v-icon>mdi-lock</v-icon>
+        </v-btn>
+        <v-btn icon @click="signOut">
+          <v-icon>mdi-account-arrow-right-outline</v-icon>
+        </v-btn>
       </div>
     </header>
 
@@ -44,34 +51,86 @@
         <!-- Component for personal evaluation -->
       </div>
       <div v-if="activeTab === 'Manajemen Pengetahuan'">
-        <h2>Manajemen Pengetahuan</h2>
+        <!-- <h2>Manajemen Pengetahuan</h2> -->
         <!-- Component for knowledge management -->
+        <UsulanPengetahuanAdmin
+          v-for="item in usulanPengetahuanList"
+          :key="item.id"
+          :info="item"
+          @selesai="handleSelesai"
+        />
+        <!-- <v-list v-for="item in usulanPengetahuanList" :key="item.id">
+          {{ item.narasumber }}: {{ item.pengetahuan }}
+        </v-list> -->
       </div>
     </main>
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiAccountLock, mdiLogout } from "@mdi/js";
+<script>
+import { ref, onMounted } from "vue";
+// import SvgIcon from "@jamescoyle/vue-icon";
+// import { mdiAccountLock, mdiLogout } from "@mdi/js";
+import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
+import api from "@/services/api";
 
-const passwordIconPath = mdiAccountLock;
-const logoutIconPath = mdiLogout;
+export default {
+  name: "PejabatDashboard",
+  components: {
+    // SvgIcon,
+    UsulanPengetahuanAdmin,
+  },
+  setup() {
+    // const passwordIconPath = mdiAccountLock;
+    // const logoutIconPath = mdiLogout;
 
-const tabs = ["Kompetensi Personil", "Manajemen Pengetahuan"];
-const activeTab = ref(tabs[0]);
+    const tabs = ["Kompetensi Personil", "Manajemen Pengetahuan"];
+    const activeTab = ref(tabs[0]);
+    const usulanPengetahuanList = ref([]);
 
-const changePassword = () => {
-  // Implement change password logic here
-  console.log("Change password clicked");
-  alert("Change password clicked!");
-};
+    const fetchUsulanPengetahuan = async () => {
+      try {
+        const response = await api.get("/usulan-pengetahuan");
+        usulanPengetahuanList.value = response.data.data;
+        console.log("Fetched usulan pengetahuan:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching usulan pengetahuan:", error);
+      }
+    };
 
-const signOut = () => {
-  // Implement sign-out logic here
-  console.log("User signed out");
-  alert("Sign out clicked!");
+    onMounted(() => {
+      fetchUsulanPengetahuan();
+    });
+
+    const handleSelesai = (id) => {
+      usulanPengetahuanList.value = usulanPengetahuanList.value.filter(
+        (item) => item.id !== id
+      );
+    };
+
+    const changePassword = () => {
+      // Implement change password logic here
+      console.log("Change password clicked");
+      alert("Change password clicked!");
+    };
+
+    const signOut = () => {
+      // Implement sign-out logic here
+      console.log("User signed out");
+      alert("Sign out clicked!");
+    };
+
+    return {
+      // passwordIconPath,
+      // logoutIconPath,
+      tabs,
+      activeTab,
+      usulanPengetahuanList,
+      changePassword,
+      signOut,
+      handleSelesai,
+    };
+  },
 };
 </script>
 

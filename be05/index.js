@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 // Use the routers
 app.use("/", indexRoutes);

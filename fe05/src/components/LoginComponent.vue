@@ -30,38 +30,43 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import apiClient from "@/services/api";
 
 export default {
-  name: "LoginComponent",
-  data() {
-    return {
-      username: "",
-      password: "",
-      loginMessage: "",
-      isError: false,
-    };
-  },
-  methods: {
-    async handleLogin() {
-      this.loginMessage = "";
-      this.isError = false;
+  setup() {
+    const username = ref("");
+    const password = ref("");
+    const loginMessage = ref("");
+    const isError = ref(false);
+
+    const handleLogin = async () => {
+      loginMessage.value = "";
+      isError.value = false;
       try {
         const response = await apiClient.post("/auth/login", {
-          username: this.username,
-          password: this.password,
+          username: username.value,
+          password: password.value,
         });
-        this.loginMessage = response.data.message;
+        loginMessage.value = response.data.message;
         // You would typically save the token here (e.g., in localStorage)
         // and update the application state (e.g., using Vuex or Pinia)
         console.log("Token:", response.data.token);
       } catch (error) {
-        this.isError = true;
-        this.loginMessage =
+        isError.value = true;
+        loginMessage.value =
           error.response?.data?.message || "An error occurred during login.";
         console.error("Login failed:", error);
       }
-    },
+    };
+
+    return {
+      username,
+      password,
+      loginMessage,
+      isError,
+      handleLogin,
+    };
   },
 };
 </script>

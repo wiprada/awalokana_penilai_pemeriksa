@@ -43,6 +43,19 @@ const getUsulanPengetahuanById = async (req, res) => {
   }
 };
 
+// Set an usulan pengetahuan to done by ID
+const setDoneUsulanPengetahuan = async (req, res) => {
+  try {
+    const usulan = await UsulanPengetahuan.setDone(req.params.id);
+    if (!usulan) {
+      return res.status(404).json({ message: "Usulan Pengetahuan not found" });
+    }
+    res.status(200).json(usulan);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Create a new usulan pengetahuan
 const createUsulanPengetahuan = async (req, res) => {
   const usulan = new UsulanPengetahuan({
@@ -94,6 +107,7 @@ module.exports = {
   getActiveUsulanPengetahuan,
   getDoneUsulanPengetahuan,
   getUsulanPengetahuanById,
+  setDoneUsulanPengetahuan,
   createUsulanPengetahuan,
   updateUsulanPengetahuan,
   deleteUsulanPengetahuan,

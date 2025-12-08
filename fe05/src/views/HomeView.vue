@@ -45,9 +45,15 @@
   </div>
 </template>
 
-<script setup>
-// Impor komponen yang akan digunakan.
-// Pastikan path ke komponen sudah benar sesuai struktur proyek Anda.
+<script>
 import Login from "@/components/LoginComponent.vue";
 import UsulanPengetahuanTable from "@/components/UsulanPengetahuanTable.vue";
+
+export default {
+  name: "HomeView",
+  components: {
+    Login,
+    UsulanPengetahuanTable,
+  },
+};
 </script>

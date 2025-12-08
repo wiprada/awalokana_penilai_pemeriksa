@@ -5,13 +5,13 @@ const UsulanPengetahuan = {
     return new Promise((resolve, reject) => {
       const dataQuery = `
           SELECT u.id, u.pengusul, u.narasumber, u.pengetahuan, v.jml_vote 
-FROM rupa_senja.usulan_pengetahuan u
-left join (SELECT id_pengetahuan, count(*) jml_vote
-FROM rupa_senja.user_vote
-group by id_pengetahuan 
-) v on v.id_pengetahuan = u.id
-where status = 0
-order by v.jml_vote desc
+          FROM rupa_senja.usulan_pengetahuan u
+          left join (SELECT id_pengetahuan, count(*) jml_vote
+          FROM rupa_senja.user_vote
+          group by id_pengetahuan 
+          ) v on v.id_pengetahuan = u.id
+          where status = 0
+          order by v.jml_vote desc
           `;
       connection.query(dataQuery, [], (err, results) => {
         if (err) {
@@ -114,6 +114,18 @@ order by v.jml_vote desc
         usulan.pengetahuan,
         id,
       ];
+      connection.query(query, values, (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(results);
+      });
+    });
+  },
+  setDone: (id) => {
+    return new Promise((resolve, reject) => {
+      const query = "UPDATE usulan_pengetahuan SET status = 1 WHERE id = ?";
+      const values = [id];
       connection.query(query, values, (err, results) => {
         if (err) {
           return reject(err);

@@ -46,34 +46,68 @@
         <!-- Component for personal evaluation -->
       </div>
       <div v-if="activeTab === 'Manajemen Pengetahuan'">
-        <h2>Manajemen Pengetahuan</h2>
+        <!-- <h2>Manajemen Pengetahuan</h2> -->
         <!-- Component for knowledge management -->
+        <UsulanPengetahuanAdmin
+          v-for="item in usulanPengetahuanList"
+          :key="item.id"
+          :info="item"
+        />
       </div>
     </main>
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script>
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiAccountLock, mdiLogout } from "@mdi/js";
+import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
+import api from "@/services/api";
 
-const passwordIconPath = mdiAccountLock;
-const logoutIconPath = mdiLogout;
-
-const tabs = ["Manajemen User", "Manajemen Penilaian", "Manajemen Pengetahuan"];
-const activeTab = ref(tabs[0]);
-
-const changePassword = () => {
-  // Implement change password logic here
-  console.log("Change password clicked");
-  alert("Change password clicked!");
-};
-
-const signOut = () => {
-  // Implement sign-out logic here
-  console.log("User signed out");
-  alert("Sign out clicked!");
+export default {
+  name: "AdminDashboard",
+  components: {
+    SvgIcon,
+    UsulanPengetahuanAdmin,
+  },
+  data() {
+    const tabs = [
+      "Manajemen User",
+      "Manajemen Penilaian",
+      "Manajemen Pengetahuan",
+    ];
+    return {
+      passwordIconPath: mdiAccountLock,
+      logoutIconPath: mdiLogout,
+      tabs: tabs,
+      activeTab: tabs[0],
+      usulanPengetahuanList: [],
+    };
+  },
+  methods: {
+    async fetchUsulanPengetahuan() {
+      try {
+        const response = await api.get("/usulan-pengetahuan");
+        this.usulanPengetahuanList = response.data.data;
+        console.log("Fetched usulan pengetahuan:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching usulan pengetahuan:", error);
+      }
+    },
+    changePassword() {
+      // Implement change password logic here
+      console.log("Change password clicked");
+      alert("Change password clicked!");
+    },
+    signOut() {
+      // Implement sign-out logic here
+      console.log("User signed out");
+      alert("Sign out clicked!");
+    },
+  },
+  mounted() {
+    this.fetchUsulanPengetahuan();
+  },
 };
 </script>
 

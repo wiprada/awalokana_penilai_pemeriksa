@@ -38,32 +38,56 @@
       >
         <!-- <h2 class="text-center">Manajemen Pengetahuan</h2> -->
         <!-- Component for knowledge management -->
-        <UsulanPengetahuanTable />
+        <UsulanPengetahuanUser
+          v-for="item in usulanPengetahuanList"
+          :key="item.id"
+          :info="item"
+        />
       </div>
     </main>
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-// import { mdiAccountLock, mdiLogout } from "@mdi/js";
-import UsulanPengetahuanTable from "@/components/UsulanPengetahuanTable.vue";
+<script>
+import api from "@/services/api";
+import UsulanPengetahuanUser from "@/components/UsulanPengetahuanUser.vue";
 
-// const passwordIconPath = mdiAccountLock;
-// const logoutIconPath = mdiLogout;
-
-const tabs = ["Nilai Personal", "Penilaian", "Manajemen Pengetahuan"];
-const activeTab = ref(tabs[0]);
-
-const changePassword = () => {
-  // Implement change password logic here
-  console.log("Change password clicked");
-  alert("Change password clicked!");
-};
-
-const signOut = () => {
-  // Implement sign-out logic here
-  console.log("User signed out");
-  alert("Sign out clicked!");
+export default {
+  name: "UserDashboard",
+  components: {
+    UsulanPengetahuanUser,
+  },
+  data() {
+    const tabs = ["Nilai Personal", "Penilaian", "Manajemen Pengetahuan"];
+    return {
+      tabs: tabs,
+      activeTab: tabs[0],
+      usulanPengetahuanList: [],
+    };
+  },
+  methods: {
+    async fetchUsulanPengetahuan() {
+      try {
+        const response = await api.get("/usulan-pengetahuan");
+        this.usulanPengetahuanList = response.data.data;
+        console.log("Fetched usulan pengetahuan:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching usulan pengetahuan:", error);
+      }
+    },
+    changePassword() {
+      // Implement change password logic here
+      console.log("Change password clicked");
+      alert("Change password clicked!");
+    },
+    signOut() {
+      // Implement sign-out logic here
+      console.log("User signed out");
+      alert("Sign out clicked!");
+    },
+  },
+  mounted() {
+    this.fetchUsulanPengetahuan();
+  },
 };
 </script>
