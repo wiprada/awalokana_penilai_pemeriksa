@@ -6,6 +6,8 @@ const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usulanPengetahuanRoutes = require("./routes/usulanPengetahuanRoutes");
 const PenilaianRoutes = require("./routes/PenilaianRoutes");
+const userVoteRoutes = require("./routes/userVoteRoutes"); // Import the new route
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +22,7 @@ app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/usulan-pengetahuan", usulanPengetahuanRoutes);
 app.use("/penilaian", PenilaianRoutes);
+app.use("/user-vote", userVoteRoutes); // Register the new route
 
 // Start the server
 app.listen(PORT, () => {

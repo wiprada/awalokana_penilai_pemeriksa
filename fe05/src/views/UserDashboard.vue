@@ -38,11 +38,15 @@
       >
         <!-- <h2 class="text-center">Manajemen Pengetahuan</h2> -->
         <!-- Component for knowledge management -->
-        <UsulanPengetahuanUser
-          v-for="item in usulanPengetahuanList"
-          :key="item.id"
-          :info="item"
-        />
+        <v-row>
+          <v-col cols="4">
+            <UsulanPengetahuanTambah />
+          </v-col>
+          <v-col cols="8">
+            <UsulanPengetahuanUser />
+            />
+          </v-col>
+        </v-row>
       </div>
     </main>
   </div>
@@ -51,11 +55,13 @@
 <script>
 import api from "@/services/api";
 import UsulanPengetahuanUser from "@/components/UsulanPengetahuanUser.vue";
+import UsulanPengetahuanTambah from "@/components/usulanPengetahuanTambah.vue";
 
 export default {
   name: "UserDashboard",
   components: {
     UsulanPengetahuanUser,
+    UsulanPengetahuanTambah,
   },
   data() {
     const tabs = ["Nilai Personal", "Penilaian", "Manajemen Pengetahuan"];

@@ -3,7 +3,10 @@ const UsulanPengetahuan = require("../models/usulanPengetahuan");
 // Get all usulan pengetahuan
 const getAllUsulanPengetahuan = async (req, res) => {
   try {
-    const result = await UsulanPengetahuan.getAll();
+    // In a real app, you would get the user ID from an authentication middleware
+    // const userId = req.user.id; 
+    const userId = req.query.userId || 1; // For demonstration, get from query or default to 1
+    const result = await UsulanPengetahuan.getAll(userId);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -58,13 +61,12 @@ const setDoneUsulanPengetahuan = async (req, res) => {
 
 // Create a new usulan pengetahuan
 const createUsulanPengetahuan = async (req, res) => {
-  const usulan = new UsulanPengetahuan({
-    ...req.body,
-  });
-
   try {
-    const newUsulan = await usulan.save();
-    res.status(201).json(newUsulan);
+    const result = await UsulanPengetahuan.save(req.body);
+    res.status(201).json({
+      message: "Usulan Pengetahuan created successfully",
+      data: result,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

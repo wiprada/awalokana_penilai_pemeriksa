@@ -1,19 +1,20 @@
 const connection = require("../koneksi.js");
 
 const UsulanPengetahuan = {
-  getAll: () => {
+  getAll: (userId = 1) => { // Assume userId is passed, default to 1 for now
     return new Promise((resolve, reject) => {
       const dataQuery = `
-          SELECT u.id, u.pengusul, u.narasumber, u.pengetahuan, v.jml_vote 
-          FROM rupa_senja.usulan_pengetahuan u
-          left join (SELECT id_pengetahuan, count(*) jml_vote
-          FROM rupa_senja.user_vote
-          group by id_pengetahuan 
-          ) v on v.id_pengetahuan = u.id
-          where status = 0
-          order by v.jml_vote desc
+          SELECT a.id, a.pengusul, a.narasumber, a.pengetahuan, b.jml_vote
+          FROM usulan_pengetahuan a
+          LEFT JOIN (
+          SELECT id_pengetahuan, COUNT(*) AS jml_vote
+          FROM user_vote
+          GROUP BY id_pengetahuan
+          ) b ON a.id = b.id_pengetahuan
+          WHERE a.status = 0
+          ORDER BY b.jml_vote DESC
           `;
-      connection.query(dataQuery, [], (err, results) => {
+      connection.query(dataQuery, [userId], (err, results) => {
         if (err) {
           return reject(err);
         }
@@ -94,7 +95,7 @@ const UsulanPengetahuan = {
   save: (usulan) => {
     return new Promise((resolve, reject) => {
       const query =
-        "INSERT INTO usulan_pengetahuan (pengusul, narasumber, pengetahuan) VALUES (?, ?, ?)";
+        "INSERT INTO usulan_pengetahuan (pengusul, narasumber, pengetahuan, status) VALUES (?, ?, ?, 0)";
       const values = [usulan.pengusul, usulan.narasumber, usulan.pengetahuan];
       connection.query(query, values, (err, results) => {
         if (err) {

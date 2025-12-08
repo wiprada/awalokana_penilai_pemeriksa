@@ -52,6 +52,7 @@
           v-for="item in usulanPengetahuanList"
           :key="item.id"
           :info="item"
+          @selesai="handleSelesai"
         />
       </div>
     </main>
@@ -103,6 +104,11 @@ export default {
       // Implement sign-out logic here
       console.log("User signed out");
       alert("Sign out clicked!");
+    },
+    handleSelesai(id) {
+      this.usulanPengetahuanList = this.usulanPengetahuanList.filter(
+        (item) => item.id !== id
+      );
     },
   },
   mounted() {
