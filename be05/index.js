@@ -8,7 +8,6 @@ const usulanPengetahuanRoutes = require("./routes/usulanPengetahuanRoutes");
 const PenilaianRoutes = require("./routes/PenilaianRoutes");
 const userVoteRoutes = require("./routes/userVoteRoutes"); // Import the new route
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 

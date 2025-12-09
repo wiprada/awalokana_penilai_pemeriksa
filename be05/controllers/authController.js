@@ -69,12 +69,13 @@ exports.login = (req, res) => {
 
     // Create and sign a JWT
     const token = jwt.sign(
-      { id: user.id, 
-        username: user.username, 
-        role: user.peran, 
+      {
+        id: user.id,
+        username: user.username,
+        role: user.peran,
         grup: user.grup,
         nama: user.nama,
-       },
+      },
       JWT_SECRET,
       {
         expiresIn: "1h", // Token expires in 1 hour
