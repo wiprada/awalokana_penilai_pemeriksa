@@ -23,50 +23,67 @@
         class="mt-4 text-center"
         :class="isError ? 'text-red' : 'text-green'"
       >
-        {{ loginMessage }}
+        <v-alert :type="isError ? 'error' : 'success'" density="compact">
+          {{ loginMessage }}
+        </v-alert>
       </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { ref } from "vue";
 import apiClient from "@/services/api";
+import { useRouter } from "vue-router";
 
 export default {
+  name: "LoginComponent",
   setup() {
-    const username = ref("");
-    const password = ref("");
-    const loginMessage = ref("");
-    const isError = ref(false);
-
-    const handleLogin = async () => {
-      loginMessage.value = "";
-      isError.value = false;
+    const router = useRouter();
+    return { router };
+  },
+  data() {
+    return {
+      username: "",
+      password: "",
+      loginMessage: "",
+      isError: false,
+    };
+  },
+  methods: {
+    async handleLogin() {
+      this.loginMessage = "";
+      this.isError = false;
       try {
         const response = await apiClient.post("/auth/login", {
-          username: username.value,
-          password: password.value,
+          username: this.username,
+          password: this.password,
         });
-        loginMessage.value = response.data.message;
-        // You would typically save the token here (e.g., in localStorage)
-        // and update the application state (e.g., using Vuex or Pinia)
-        console.log("Token:", response.data.token);
+        this.loginMessage = response.data.message;
+
+        // Save token and user data
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        console.log("Login successful:", response.data);
+
+        // Redirect based on role
+        const user = response.data.user;
+
+        if (user.role === "admin") {
+          this.$router.push("/admin");
+        } else if (user.role === "struktural") {
+          this.$router.push("/pejabat");
+        } else if (user.role === "pemeriksa") {
+          this.$router.push(`/user`);
+        } else {
+          this.$router.push("/"); // Fallback to home
+        }
       } catch (error) {
-        isError.value = true;
-        loginMessage.value =
+        this.isError = true;
+        this.loginMessage =
           error.response?.data?.message || "An error occurred during login.";
         console.error("Login failed:", error);
       }
-    };
-
-    return {
-      username,
-      password,
-      loginMessage,
-      isError,
-      handleLogin,
-    };
+    },
   },
 };
 </script>

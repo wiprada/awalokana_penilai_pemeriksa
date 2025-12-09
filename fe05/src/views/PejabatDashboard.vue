@@ -69,6 +69,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 // import SvgIcon from "@jamescoyle/vue-icon";
 // import { mdiAccountLock, mdiLogout } from "@mdi/js";
 import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
@@ -113,11 +114,14 @@ export default {
       console.log("Change password clicked");
       alert("Change password clicked!");
     };
-
+    const router = useRouter();
     const signOut = () => {
       // Implement sign-out logic here
-      console.log("User signed out");
-      alert("Sign out clicked!");
+      // console.log("User signed out");
+      // alert("Sign out clicked!");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/");
     };
 
     return {

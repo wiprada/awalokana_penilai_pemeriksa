@@ -1,9 +1,9 @@
 const connection = require("../koneksi.js");
 
 const UsulanPengetahuan = {
-  getAll: (userId = 1) => { // Assume userId is passed, default to 1 for now
+  getAll: () => {
     return new Promise((resolve, reject) => {
-      const dataQuery = `
+      let dataQuery = `
           SELECT a.id, a.pengusul, a.narasumber, a.pengetahuan, b.jml_vote
           FROM usulan_pengetahuan a
           LEFT JOIN (
@@ -11,10 +11,11 @@ const UsulanPengetahuan = {
           FROM user_vote
           GROUP BY id_pengetahuan
           ) b ON a.id = b.id_pengetahuan
-          WHERE a.status = 0
           ORDER BY b.jml_vote DESC
           `;
-      connection.query(dataQuery, [userId], (err, results) => {
+
+      const params = [];
+      connection.query(dataQuery, params, (err, results) => {
         if (err) {
           return reject(err);
         }

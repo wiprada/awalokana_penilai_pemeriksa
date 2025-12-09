@@ -1,12 +1,9 @@
 const UsulanPengetahuan = require("../models/usulanPengetahuan");
 
 // Get all usulan pengetahuan
-const getAllUsulanPengetahuan = async (req, res) => {
+const getAllUsulanPengetahuan = async (_req, res) => {
   try {
-    // In a real app, you would get the user ID from an authentication middleware
-    // const userId = req.user.id; 
-    const userId = req.query.userId || 1; // For demonstration, get from query or default to 1
-    const result = await UsulanPengetahuan.getAll(userId);
+    const result = await UsulanPengetahuan.getAll();
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });

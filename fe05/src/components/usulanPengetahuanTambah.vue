@@ -1,6 +1,9 @@
 <template>
   <v-card class="pa-4 mb-4" outlined>
     <v-card-title> Tambah Usulan Pengetahuan </v-card-title>
+    <!-- <v-card-title>
+      {{ pengusul }}
+    </v-card-title> -->
     <v-form v-if="nama.length">
       <v-autocomplete
         clearable
@@ -28,10 +31,12 @@ export default {
   name: "UsulanPengetahuanTambah",
   components: {},
   data() {
+    const IDUser = JSON.parse(localStorage.getItem("user")).nama;
     return {
       narasumber: "",
       materi: "",
       nama: [],
+      pengusul: IDUser,
     };
   },
   methods: {
@@ -40,9 +45,9 @@ export default {
       console.log("Usulan Pengetahuan:", this.narasumber, this.materi);
       // You can add an API call here to submit the data to the backend
       // TODO: Replace 'Current User' with the actual name of the logged-in user
-      const pengusul = "Current User";
+      // const pengusul = "Current User";
       api.post("/usulan-pengetahuan", {
-        pengusul: pengusul,
+        pengusul: this.pengusul,
         narasumber: this.narasumber,
         pengetahuan: this.materi,
       });
@@ -52,6 +57,9 @@ export default {
       // Clear the form
       this.narasumber = "";
       this.materi = "";
+      this.$emit("usulan-added");
+      // Alternatively, to force a full page reload:
+      // location.reload();
     },
     async fetchName() {
       // Fetch the list of names for the autocomplete

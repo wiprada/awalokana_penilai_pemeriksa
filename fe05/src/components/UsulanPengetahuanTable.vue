@@ -6,7 +6,6 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>PENGUSUL</th>
           <th>NARASUMBER</th>
           <th>PENGETAHUAN</th>
           <th>JUMLAH VOTE</th>
@@ -14,7 +13,6 @@
       </thead>
       <tbody>
         <tr v-for="item in usulanData" :key="item.id">
-          <td>{{ item.pengusul }}</td>
           <td>{{ item.narasumber }}</td>
           <td>{{ item.pengetahuan }}</td>
           <td>{{ item.jml_vote || 0 }}</td>
@@ -43,6 +41,7 @@ export default {
 
         // Simpan data dan informasi paginasi dari server
         this.usulanData = response.data.data;
+        console.log(this.usulanData);
       } catch (error) {
         console.error("Gagal mengambil data:", error);
       } finally {

@@ -30,16 +30,18 @@
 <script>
 import apiClient from "@/services/api";
 export default {
-  props: {
-    info: {
-      type: Object,
-      required: true,
-    },
-  },
+  // props: {
+  //   info: {
+  //     type: Object,
+  //     required: true,
+  //   },
+  // },
   data() {
+    const IDUser = JSON.parse(localStorage.getItem("user")).id;
     return {
       usulanPengetahuanList: [],
       statusVote: {}, // Track vote status per item id
+      id_user: IDUser,
     };
   },
   emits: ["selesai"],
@@ -57,7 +59,7 @@ export default {
       try {
         const response = await apiClient.post("/user-vote/check", {
           id_pengetahuan: id,
-          id_user: 1, // TODO: Replace '1' with the actual authenticated user ID
+          id_user: this.id_user,
         });
         // In Vue 3, direct assignment is reactive.
         this.statusVote[id] = response.data.hasVoted;
@@ -71,7 +73,7 @@ export default {
         // TODO: Replace '1' with the actual authenticated user ID
         await apiClient.post(`/user-vote`, {
           id_pengetahuan: id,
-          id_user: 1,
+          id_user: this.id_user,
         });
         this.$emit("selesai", id);
         // After voting, update the status and refetch the list

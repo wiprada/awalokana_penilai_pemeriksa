@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import AdminDashboard from "../views/AdminDashboard.vue";
+import PejabatDashboard from "../views/PejabatDashboard.vue";
+import UserDashboard from "../views/UserDashboard.vue";
 
 const routes = [
   {
@@ -8,34 +11,41 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/user-dashboard",
+    path: "/user",
     name: "userDashboard",
-    component: () =>
-      import(
-        /* webpackChunkName: "userDashboard" */ "../views/UserDashboard.vue"
-      ),
+    component: UserDashboard,
+    meta: { requiresAuth: true },
   },
   {
-    path: "/pejabat-dashboard",
+    path: "/pejabat",
     name: "pejabatDashboard",
-    component: () =>
-      import(
-        /* webpackChunkName: "pejabatDashboard" */ "../views/PejabatDashboard.vue"
-      ),
+    component: PejabatDashboard,
+    meta: { requiresAuth: true },
   },
   {
-    path: "/admin-dashboard",
+    path: "/admin",
     name: "adminDashboard",
-    component: () =>
-      import(
-        /* webpackChunkName: "adminDashboard" */ "../views/AdminDashboard.vue"
-      ),
+    component: AdminDashboard,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// Bagian ini memastikan jika belum login, user akan diarahkan ke halaman home
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  // This is a simplified check. You should use your actual authentication state.
+  const isAuthenticated = localStorage.getItem("user");
+
+  if (requiresAuth && !isAuthenticated) {
+    next({ name: "home" });
+  } else {
+    next();
+  }
 });
 
 export default router;

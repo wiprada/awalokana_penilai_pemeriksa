@@ -69,7 +69,12 @@ exports.login = (req, res) => {
 
     // Create and sign a JWT
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, 
+        username: user.username, 
+        role: user.peran, 
+        grup: user.grup,
+        nama: user.nama,
+       },
       JWT_SECRET,
       {
         expiresIn: "1h", // Token expires in 1 hour
@@ -79,6 +84,13 @@ exports.login = (req, res) => {
     res.status(200).json({
       message: "Logged in successfully.",
       token: token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.peran,
+        grup: user.grup,
+        nama: user.nama,
+      },
     });
   });
 };

@@ -22,7 +22,29 @@ const getPenilaianById = async (req, res) => {
   }
 };
 
+// Get Penilaian by id_penilai
+const getPenilaianByIdPenilai = async (req, res) => {
+  try {
+    const result = await penilaian.getByIdPenilai(req.params.id_penilai);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get penugasan by id_penilai
+const getPenugasanByIdPenilai = async (req, res) => {
+  try {
+    const result = await penilaian.getPenugasanByIdPenilai(req.params.id_penilai);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllPenilaian,
   getPenilaianById,
+  getPenilaianByIdPenilai,
+  getPenugasanByIdPenilai,
 };

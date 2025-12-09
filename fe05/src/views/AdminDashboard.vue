@@ -62,6 +62,7 @@
 <script>
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiAccountLock, mdiLogout } from "@mdi/js";
+import { useRouter } from "vue-router";
 import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
 import api from "@/services/api";
 
@@ -70,6 +71,15 @@ export default {
   components: {
     SvgIcon,
     UsulanPengetahuanAdmin,
+  },
+  setup() {
+    const router = useRouter();
+    const signOut = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/");
+    };
+    return { signOut };
   },
   data() {
     const tabs = [
@@ -99,11 +109,6 @@ export default {
       // Implement change password logic here
       console.log("Change password clicked");
       alert("Change password clicked!");
-    },
-    signOut() {
-      // Implement sign-out logic here
-      console.log("User signed out");
-      alert("Sign out clicked!");
     },
     handleSelesai(id) {
       this.usulanPengetahuanList = this.usulanPengetahuanList.filter(
