@@ -60,7 +60,7 @@
 import { useRouter } from "vue-router";
 import api from "@/services/api";
 import UsulanPengetahuanUser from "@/components/UsulanPengetahuanUser.vue";
-import UsulanPengetahuanTambah from "@/components/UsulanPengetahuanTambah.vue";
+import UsulanPengetahuanTambah from "@/components/usulanPengetahuanTambah.vue";
 // import PenilaianUser from "@/components/PenilaianUser.vue";
 import PenugasanUser from "@/components/PenugasanUser.vue";
 
