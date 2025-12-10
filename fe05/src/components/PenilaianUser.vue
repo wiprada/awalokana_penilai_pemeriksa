@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-row>
+  <v-container fluid width="100%">
+    <v-row no-gutters="true">
       <v-col>
         <v-card outlined>
           <v-card-title>ST: {{ item.no_st }}</v-card-title>
@@ -17,7 +17,7 @@
           <v-card-text>
             <div><strong>Peran Anda:</strong> {{ item.peran_penilai }}</div>
             <v-divider></v-divider>
-            <div class="text-subtitle-1 ma-2">Aspek Pemeriksaan:</div>
+            <div class="text-subtitle-1">Aspek Pemeriksaan:</div>
             <table>
               <tr>
                 <td>Perencanaan</td>
@@ -68,8 +68,8 @@
                 </td>
               </tr>
             </table>
-            <v-divider class="my-2"></v-divider>
-            <div class="text-subtitle-1 ma-2">Aspek Perilaku:</div>
+            <v-divider></v-divider>
+            <div class="text-subtitle-1">Aspek Perilaku:</div>
             <tr>
               <td>Pelayanan</td>
               <td>
@@ -182,8 +182,7 @@
                 />
               </td>
             </tr>
-            <v-divider class="my-2"></v-divider>
-            <!-- <p><strong>Catatan Kualitatif:</strong> {{ item.kualitatif }}</p> -->
+            <v-divider></v-divider>
             <v-text-field
               label="Kualitatif: Berikan komentar atau saran untuk pemeriksa"
               name="name"
@@ -196,7 +195,7 @@
           <v-card-actions>
             <v-btn
               class="bg-primary d-flex"
-              cols="12"
+              cols="2"
               outlined
               @click="savePenilaian"
               :disabled="isSaved"

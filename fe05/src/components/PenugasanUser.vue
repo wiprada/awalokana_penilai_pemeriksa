@@ -1,18 +1,20 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" md="8">
-      <v-row>
-        <v-col
-          v-for="item in penilaianData"
-          :key="item.id_penilaian"
-          cols="6"
-          sm="4"
-        >
-          <PenilaianUser :item="item" />
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+  <v-container fluid class="bg-info">
+    <v-row no-gutters="true" justify="space-evenly" align-content="center">
+      <v-col>
+        <v-row no-gutters="true">
+          <v-col
+            v-for="item in penilaianData"
+            :key="item.id_penilaian"
+            sm="12"
+            md="4"
+          >
+            <PenilaianUser :item="item" />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 import apiClient from "@/services/api";

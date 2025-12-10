@@ -1,48 +1,36 @@
 <template>
-  <div class="container-fluid p-4">
-    <v-row class="bg-background text-surface">
-      <v-col cols="4">
-        <!-- Kolom 1: Komponen Login (Rasio 3) -->
-        <div class="row ma-4 align-items-center bg-white rounded-lg">
-          <div class="col-md-12 text-center ma-4">
-            <div class="align-center">
-              <!-- Logo -->
-              <img src="@/assets/logo.png" alt="Logo" class="logo w-100" />
-            </div>
-            <!-- Teks Pengantar -->
-            <h1 x-large class="ma-5">
-              Ruang Pemeriksa untuk Sharing dan Evaluasi Kinerja
-            </h1>
-            <p>
-              Gas poll, Pemeriksa BPK Bali! Ini bukan sekadar aplikasi
-              'nilai-menilai' yang bikin ngantuk. Ini tempat kita berani jujur
-              biar kinerja makin naik. Jangan takut, santai aja, ini bukan buat
-              cari siapa yang paling 'sempurna'.
-            </p>
-            <p>
-              Ini soal kita semua bisa saling bantu, saling kasih masukan yang
-              to the point, biar BPK Bali makin keren. Jadi, siapkan jari, beri
-              nilai yang apa adanya, dan sebarkan pengetahuanmu, atau usulkan
-              siapa yang harus membagi pengetahuannya.
-            </p>
-            <h3>
-              Selamat datang di era penilaian yang real dan anti-mainstream!
-            </h3>
-            <p>#jagadiri #jagawarga #jagaprofesionalitas</p>
-          </div>
-        </div>
-        <div class="col-md-3 ma-4 rounded-lg">
-          <Login />
-        </div>
+  <v-container fluid wrap width="100%" class="bg-surface">
+    <v-row align-content="stretch">
+      <v-col sm="12" md="4" class="bg-secondary">
+        <v-img :src="require('@/assets/logo.png')" cover></v-img>
       </v-col>
-      <v-col cols="8">
-        <!-- Kolom 2: Komponen Tabel (Rasio 9) -->
-        <div class="col-md-9 text-warning">
-          <UsulanPengetahuanTable />
-        </div>
+      <v-col sm="12" md="8" class="bg-warning" align-self="stretch">
+        <h1 class="ma-1">Ruang Pemeriksa untuk Sharing dan Evaluasi Kinerja</h1>
+        <p>
+          Gas poll, Pemeriksa BPK Bali! Ini bukan sekadar aplikasi
+          'nilai-menilai' yang bikin ngantuk. Ini tempat kita berani jujur biar
+          kinerja makin naik. Jangan takut, santai aja, ini bukan buat cari
+          siapa yang paling 'sempurna'.
+        </p>
+        <p>
+          Ini soal kita semua bisa saling bantu, saling kasih masukan yang to
+          the point, biar BPK Bali makin keren. Jadi, siapkan jari, beri nilai
+          yang apa adanya, dan sebarkan pengetahuanmu, atau usulkan siapa yang
+          harus membagi pengetahuannya.
+        </p>
+        <h3>Selamat datang di era penilaian yang real dan anti-mainstream!</h3>
+        <p>#jagadiri #jagawarga #jagaprofesionalitas</p>
       </v-col>
     </v-row>
-  </div>
+    <v-row align-content="stretch">
+      <v-col sm="12" md="4">
+        <Login />
+      </v-col>
+      <v-col sm="12" md="8">
+        <UsulanPengetahuanTable />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

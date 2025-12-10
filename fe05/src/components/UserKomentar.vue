@@ -1,14 +1,23 @@
 <template>
-  <div>
-    <h2>Saran dari Penilai</h2>
-  </div>
-  <v-sheet v-for="item in komentarPersonal" :key="item.id_penilaian">
-    <ul>
-      <li>{{ item.kualitatif }}</li>
-    </ul>
-    <!-- <p>{{ item.kualitatif }}</p> -->
-    <v-divider></v-divider>
-  </v-sheet>
+  <v-container fluid wrap width="100%">
+    <v-row>
+      <v-col> Saran dari Penilai </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card
+          v-for="item in komentarPersonal"
+          :key="item.id_penilaian"
+          class="ma-2 pa-2"
+          outlined
+        >
+          <v-card-text>
+            {{ item.kualitatif }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 import apiClient from "@/services/api";
