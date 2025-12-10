@@ -2,7 +2,12 @@
   <v-row justify="center" align="center">
     <v-col cols="12" md="8">
       <v-row>
-        <v-col v-for="item in penilaianData" :key="item.id" cols="6" sm="4">
+        <v-col
+          v-for="item in penilaianData"
+          :key="item.id_penilaian"
+          cols="6"
+          sm="4"
+        >
           <PenilaianUser :item="item" />
         </v-col>
       </v-row>

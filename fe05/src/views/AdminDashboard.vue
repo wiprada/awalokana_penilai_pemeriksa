@@ -11,16 +11,17 @@
         <h1 class="header-title" style="color: darkblue">Dashboard Admin</h1>
       </div>
       <div class="header-right">
-        <button
-          @click="changePassword"
-          class="change-password-button"
-          aria-label="Ganti Password"
-        >
-          <svg-icon type="mdi" :path="passwordIconPath"></svg-icon>
-        </button>
-        <button @click="signOut" class="signout-button" aria-label="Sign Out">
-          <svg-icon type="mdi" :path="logoutIconPath"></svg-icon>
-        </button>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = true">
+          <v-icon>mdi-lock</v-icon>
+        </v-btn>
+        <v-dialog v-model="dialog" max-width="500px">
+          <GantiPassword />
+          <v-btn @click="dialog = false"> Selesai </v-btn>
+        </v-dialog>
+        <v-btn icon @click="signOut">
+          <v-icon>mdi-account-arrow-right-outline</v-icon>
+        </v-btn>
       </div>
     </header>
 
@@ -38,12 +39,12 @@
     <main class="tab-content">
       <!-- Render content based on activeTab -->
       <div v-if="activeTab === 'Manajemen User'">
-        <h2>Manajemen User</h2>
-        <!-- Component for personal evaluation -->
+        <!-- <h2>Manajemen User</h2> -->
+        <AdminDaftarUser />
       </div>
       <div v-if="activeTab === 'Manajemen Penilaian'">
-        <h2>Manajemen Penilaian</h2>
-        <!-- Component for personal evaluation -->
+        <!-- <h2>Manajemen Penilaian</h2> -->
+        <AdminNilaiUser />
       </div>
       <div v-if="activeTab === 'Manajemen Pengetahuan'">
         <!-- <h2>Manajemen Pengetahuan</h2> -->
@@ -60,17 +61,20 @@
 </template>
 
 <script>
-import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiAccountLock, mdiLogout } from "@mdi/js";
 import { useRouter } from "vue-router";
 import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
+import GantiPassword from "@/components/GantiPassword.vue";
 import api from "@/services/api";
+import AdminNilaiUser from "@/components/AdminNilaiUser.vue";
+import AdminDaftarUser from "@/components/AdminDaftarUser.vue";
 
 export default {
   name: "AdminDashboard",
   components: {
-    SvgIcon,
     UsulanPengetahuanAdmin,
+    GantiPassword,
+    AdminNilaiUser,
+    AdminDaftarUser,
   },
   setup() {
     const router = useRouter();
@@ -88,11 +92,10 @@ export default {
       "Manajemen Pengetahuan",
     ];
     return {
-      passwordIconPath: mdiAccountLock,
-      logoutIconPath: mdiLogout,
       tabs: tabs,
       activeTab: tabs[0],
       usulanPengetahuanList: [],
+      dialog: false,
     };
   },
   methods: {
@@ -104,11 +107,6 @@ export default {
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }
-    },
-    changePassword() {
-      // Implement change password logic here
-      console.log("Change password clicked");
-      alert("Change password clicked!");
     },
     handleSelesai(id) {
       this.usulanPengetahuanList = this.usulanPengetahuanList.filter(

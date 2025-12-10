@@ -8,9 +8,13 @@
         </v-spacer>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click="changePassword">
+      <v-btn icon @click="dialog = true">
         <v-icon>mdi-lock</v-icon>
       </v-btn>
+      <v-dialog v-model="dialog" max-width="500px">
+        <GantiPassword />
+        <v-btn @click="dialog = false"> Selesai </v-btn>
+      </v-dialog>
       <v-btn icon @click="signOut">
         <v-icon>mdi-account-arrow-right-outline</v-icon>
       </v-btn>
@@ -30,8 +34,18 @@
     <main class="tab-content d-flex ma-2">
       <!-- Render content based on activeTab -->
       <div v-if="activeTab === 'Nilai Personal'">
-        <h2>Nilai Personal</h2>
+        <!-- <h2>Nilai Personal</h2> -->
         <!-- Component for personal evaluation -->
+        <div
+          class="d-flex justify-space-between mb-6 bg-surface-variant justify-center"
+        >
+          <v-sheet cols="6" class="pa-2 ma-4">
+            <UserNilai />
+          </v-sheet>
+          <v-sheet cols="6" class="pa-2 ma-4">
+            <UserKomentar />
+          </v-sheet>
+        </div>
       </div>
       <div v-if="activeTab === 'Penilaian'">
         <!-- <h2>Penilaian</h2> -->
@@ -60,17 +74,21 @@
 import { useRouter } from "vue-router";
 import api from "@/services/api";
 import UsulanPengetahuanUser from "@/components/UsulanPengetahuanUser.vue";
-import UsulanPengetahuanTambah from "@/components/usulanPengetahuanTambah.vue";
-// import PenilaianUser from "@/components/PenilaianUser.vue";
+import UsulanPengetahuanTambah from "@/components/UsulanPengetahuanTambah.vue";
 import PenugasanUser from "@/components/PenugasanUser.vue";
+import UserKomentar from "@/components/UserKomentar.vue";
+import UserNilai from "@/components/UserNilai.vue";
+import GantiPassword from "@/components/GantiPassword.vue";
 
 export default {
   name: "UserDashboard",
   components: {
     UsulanPengetahuanUser,
     UsulanPengetahuanTambah,
-    // PenilaianUser,
     PenugasanUser,
+    UserKomentar,
+    UserNilai,
+    GantiPassword,
   },
   setup() {
     const router = useRouter();
@@ -89,6 +107,7 @@ export default {
       activeTab: tabs[0],
       usulanPengetahuanList: [],
       nama: namaUser,
+      dialog: false,
     };
   },
   methods: {
@@ -100,11 +119,6 @@ export default {
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }
-    },
-    changePassword() {
-      // Implement change password logic here
-      console.log("Change password clicked");
-      alert("Change password clicked!");
     },
   },
   mounted() {

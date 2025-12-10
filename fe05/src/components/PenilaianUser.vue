@@ -5,6 +5,7 @@
         <v-card outlined>
           <v-card-title>ST: {{ item.no_st }}</v-card-title>
           <v-card-text> {{ item.entabr }} : ( {{ item.tglst }} )</v-card-text>
+          <!-- <p>{{ item.id_penilaian }}</p> -->
           <v-card-text>
             {{ item.perihalst }}
           </v-card-text>
@@ -29,7 +30,7 @@
                     active-color="primary"
                     empty-icon="mdi-thumb-up-outline"
                     full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiPerencanaan"
+                    v-model="editedItem.NilaiRikRenc"
                     label="Perencanaan"
                   />
                 </td>
@@ -45,7 +46,7 @@
                     active-color="primary"
                     empty-icon="mdi-thumb-up-outline"
                     full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiPelaksanaan"
+                    v-model="editedItem.NilaiRikLaks"
                     label="Pelaksanaan"
                   />
                 </td>
@@ -61,7 +62,7 @@
                     active-color="primary"
                     empty-icon="mdi-thumb-up-outline"
                     full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiPelaporan"
+                    v-model="editedItem.NilaiRikLap"
                     label="Pelaporan"
                   />
                 </td>
@@ -128,7 +129,7 @@
                   active-color="primary"
                   empty-icon="mdi-thumb-up-outline"
                   full-icon="mdi-thumb-up"
-                  v-model="editedItem.NilaiHarmonis"
+                  v-model="editedItem.NilaiHarmoni"
                   label="Harmonis"
                 />
               </td>
@@ -144,7 +145,7 @@
                   active-color="primary"
                   empty-icon="mdi-thumb-up-outline"
                   full-icon="mdi-thumb-up"
-                  v-model="editedItem.NilaiLoyalitas"
+                  v-model="editedItem.NilaiLoyal"
                   label="Loyalitas"
                 />
               </td>
@@ -182,12 +183,25 @@
               </td>
             </tr>
             <v-divider class="my-2"></v-divider>
-            <p><strong>Catatan Kualitatif:</strong> {{ item.kualitatif }}</p>
+            <!-- <p><strong>Catatan Kualitatif:</strong> {{ item.kualitatif }}</p> -->
+            <v-text-field
+              label="Kualitatif: Berikan komentar atau saran untuk pemeriksa"
+              name="name"
+              v-model="editedItem.NilaiKualitatif"
+              rows="4"
+              textarea
+              auto-grow
+            ></v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-chip :color="item.status ? 'green' : 'orange'" dark>
-              {{ item.status ? "Selesai" : "Belum Selesai" }}
-            </v-chip>
+            <v-btn
+              class="bg-primary d-flex"
+              cols="12"
+              outlined
+              @click="savePenilaian"
+              :disabled="isSaved"
+              >Simpan</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -209,22 +223,23 @@ export default {
       penilaianData: [],
       id_penilai: null,
       editedItem: {
-        // id_penilaian: '',
+        id_penilaian: "",
         // dinilai: '',
         // id_dinilai: '',
         // fotolink: '',
-        NilaiPerencanaan: 0,
-        NilaiPelaksanaan: 0,
-        NilaiPelaporan: 0,
+        NilaiRikRenc: 0,
+        NilaiRikLaks: 0,
+        NilaiRikLap: 0,
         NilaiPelayanan: 0,
         NilaiAkuntabel: 0,
         NilaiKompeten: 0,
-        NilaiHarmonis: 0,
-        NilaiLoyalitas: 0,
+        NilaiHarmoni: 0,
+        NilaiLoyal: 0,
         NilaiAdaptif: 0,
         NilaiKolaboratif: 0,
-        // kualitatif: ''
+        NilaiKualitatif: "",
       },
+      isSaved: false,
     };
   },
   methods: {
@@ -239,6 +254,25 @@ export default {
       } catch (error) {
         console.error("Error fetching penilaian data:", error);
       }
+    },
+    savePenilaian() {
+      // Logic to save the penilaian data
+      // update id_penilaian in editedItem
+      this.editedItem.id_penilaian = this.item.id_penilaian;
+      console.log("Saving penilaian data:", this.editedItem);
+      // You can make an API call here to save the data to the backend
+      apiClient
+        .put("/penilaian/update", this.editedItem)
+        .then((response) => {
+          console.log("Penilaian saved successfully:", response.data);
+          alert("Penilaian berhasil disimpan!");
+        })
+        .catch((error) => {
+          console.error("Error saving penilaian data:", error);
+          alert("Gagal menyimpan penilaian.");
+        });
+
+      this.isSaved = true;
     },
   },
   mounted() {

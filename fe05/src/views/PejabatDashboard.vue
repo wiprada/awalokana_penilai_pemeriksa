@@ -11,22 +11,17 @@
         <h1 class="header-title" style="color: darkblue">
           Dashboard Pejabat Struktural
         </h1>
+        <h2 class="text-surface">{{ namaPejabat }}</h2>
       </div>
       <div class="header-right">
-        <!-- <button
-          @click="changePassword"
-          class="change-password-button"
-          aria-label="Ganti Password"
-        >
-          <svg-icon type="mdi" :path="passwordIconPath"></svg-icon>
-        </button>
-        <button @click="signOut" class="signout-button" aria-label="Sign Out">
-          <svg-icon type="mdi" :path="logoutIconPath"></svg-icon>
-        </button> -->
         <v-spacer></v-spacer>
-        <v-btn icon @click="changePassword">
+        <v-btn icon @click="dialog = true">
           <v-icon>mdi-lock</v-icon>
         </v-btn>
+        <v-dialog v-model="dialog" max-width="500px">
+          <GantiPassword />
+          <v-btn @click="dialog = false"> Selesai </v-btn>
+        </v-dialog>
         <v-btn icon @click="signOut">
           <v-icon>mdi-account-arrow-right-outline</v-icon>
         </v-btn>
@@ -47,8 +42,9 @@
     <main class="tab-content">
       <!-- Render content based on activeTab -->
       <div v-if="activeTab === 'Kompetensi Personil'">
-        <h2>Kompetensi Personil</h2>
+        <!-- <h2>Kompetensi Personil</h2> -->
         <!-- Component for personal evaluation -->
+        <NilaiKelompok />
       </div>
       <div v-if="activeTab === 'Manajemen Pengetahuan'">
         <!-- <h2>Manajemen Pengetahuan</h2> -->
@@ -68,72 +64,65 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-// import SvgIcon from "@jamescoyle/vue-icon";
-// import { mdiAccountLock, mdiLogout } from "@mdi/js";
 import UsulanPengetahuanAdmin from "@/components/UsulanPengetahuanAdmin.vue";
-import api from "@/services/api";
+import apiClient from "@/services/api";
+import NilaiKelompok from "@/components/NilaiKelompok.vue";
+import GantiPassword from "@/components/GantiPassword.vue";
 
 export default {
   name: "PejabatDashboard",
   components: {
     // SvgIcon,
     UsulanPengetahuanAdmin,
+    NilaiKelompok,
+    GantiPassword,
   },
-  setup() {
-    // const passwordIconPath = mdiAccountLock;
-    // const logoutIconPath = mdiLogout;
-
+  data() {
     const tabs = ["Kompetensi Personil", "Manajemen Pengetahuan"];
-    const activeTab = ref(tabs[0]);
-    const usulanPengetahuanList = ref([]);
-
-    const fetchUsulanPengetahuan = async () => {
+    return {
+      router: useRouter(),
+      tabs: tabs,
+      activeTab: ref(tabs[0]),
+      usulanPengetahuanList: [],
+      namaPejabat: null,
+      dialog: false,
+    };
+  },
+  methods: {
+    // fungsi mengambil usulan pengetahuan
+    async fetchUsulanPengetahuan() {
       try {
-        const response = await api.get("/usulan-pengetahuan");
-        usulanPengetahuanList.value = response.data.data;
+        const response = await apiClient.get("/usulan-pengetahuan");
+        this.usulanPengetahuanList = response.data.data;
         console.log("Fetched usulan pengetahuan:", response.data.data);
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }
-    };
-
-    onMounted(() => {
-      fetchUsulanPengetahuan();
-    });
-
-    const handleSelesai = (id) => {
-      usulanPengetahuanList.value = usulanPengetahuanList.value.filter(
+    },
+    // fungsi menangani selesai usulan pengetahuan
+    handleSelesai(id) {
+      this.usulanPengetahuanList = this.usulanPengetahuanList.filter(
         (item) => item.id !== id
       );
-    };
-
-    const changePassword = () => {
-      // Implement change password logic here
-      console.log("Change password clicked");
-      alert("Change password clicked!");
-    };
-    const router = useRouter();
-    const signOut = () => {
+    },
+    // fungsi sign out
+    signOut() {
       // Implement sign-out logic here
       // console.log("User signed out");
       // alert("Sign out clicked!");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      router.push("/");
-    };
-
-    return {
-      // passwordIconPath,
-      // logoutIconPath,
-      tabs,
-      activeTab,
-      usulanPengetahuanList,
-      changePassword,
-      signOut,
-      handleSelesai,
-    };
+      this.$router.push("/");
+    },
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      this.namaPejabat = user.nama;
+      this.fetchUsulanPengetahuan();
+    }
   },
 };
 </script>
