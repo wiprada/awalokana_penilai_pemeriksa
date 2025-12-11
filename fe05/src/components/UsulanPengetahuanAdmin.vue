@@ -1,18 +1,18 @@
 <template>
   <v-card class="mb-4" outlined>
-    <v-card-title class="bg-primary"
+    <v-card-title class="bg-primary text-background"
       >Narasumber: {{ info.narasumber }}</v-card-title
     >
     <v-card-text class="pa-4">
       {{ info.pengetahuan }}
     </v-card-text>
     <v-card-text> {{ info.jml_vote || 0 }} votes </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" @click="selesai(info.id)">
+    <v-card-actions class="justify-center bg-lime">
+      <v-btn color="background" @click="selesai(info.id)">
         <v-icon>mdi-checkbox-marked-outline</v-icon>
+        <h4>Sudah dilaksanakan</h4>
       </v-btn>
     </v-card-actions>
-    <!-- <v-card-text> ID: {{ info.id }} </v-card-text> -->
   </v-card>
 </template>
 

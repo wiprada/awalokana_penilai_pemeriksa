@@ -6,6 +6,8 @@ const router = express.Router();
 
 // GET all user names
 router.get("/names", userController.getAllPegawai);
+// GET user by ID
+router.get("/user/:id", userController.getUserById);
 // GET all users full data
 router.get("/", userController.getAllUsers);
 // Reset user password (admin only) - to be implemented

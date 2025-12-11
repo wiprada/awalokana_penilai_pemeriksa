@@ -108,7 +108,7 @@ export default {
         )
       ) {
         try {
-          await apiClient.put(`/penilaian/admin/${id_penilai}`);
+          await apiClient.put(`/penilaian/admin/user/${id_penilai}`);
           alert(`Penilaian for ID Penilai: ${id_penilai} has been reset.`);
           this.fetchProgressData(); // Refresh data after reset
         } catch (error) {

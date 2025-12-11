@@ -37,7 +37,7 @@ export default {
       this.isLoading = true; // Mulai memuat
       try {
         // Panggil api dengan parameter halaman dan limit
-        const response = await api.get(`/usulan-pengetahuan/`);
+        const response = await api.get(`/usulan-pengetahuan`);
 
         // Simpan data dan informasi paginasi dari server
         this.usulanData = response.data.data;

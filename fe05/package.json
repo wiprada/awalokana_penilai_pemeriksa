@@ -1,6 +1,6 @@
 {
-  "name": "fe05",
-  "version": "0.1.0",
+  "name": "rupa_senja",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

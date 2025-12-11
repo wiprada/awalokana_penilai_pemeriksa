@@ -38,13 +38,6 @@ router.get(
   penilaianController.getKualitatifByIdDinilai,
 );
 
-// Route to get nilai kelompok
-router.get(
-  "/kelompok/:grup",
-  verifyToken,
-  penilaianController.getNilaiKelompokByGrup,
-);
-
 // Route to get All Progress Penilaian
 router.get(
   "/admin/progress",
@@ -54,9 +47,16 @@ router.get(
 
 // Route to Reset Penilaian per id_penilai
 router.put(
-  "/admin/:id_penilai",
+  "/admin/user/:id_penilai",
   verifyToken,
   penilaianController.resetPenilaianByIdPenilai,
+);
+
+// Route to get nilai kelompok
+router.get(
+  "/kelompok/:grup",
+  verifyToken,
+  penilaianController.getNilaiKelompokByGrup,
 );
 
 module.exports = router;

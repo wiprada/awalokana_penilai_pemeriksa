@@ -29,8 +29,24 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Get user by ID
+const getUserById = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.getUserById(userId);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+};
+
 module.exports = {
   getAllPegawai,
   getAllUsers,
   resetPassword,
+  getUserById,
 };

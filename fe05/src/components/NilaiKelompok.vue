@@ -65,18 +65,22 @@
       </template>
     </v-data-table>
     <v-divider></v-divider>
-    <div class="bg-info">
-      <h1>Komentar Penilai</h1>
-      <v-list v-if="komentarData.length > 0">
-        <v-list-item v-for="(komentar, index) in komentarData" :key="index">
-          <v-list-item-content>
-            <v-list-item-subtitle>{{
-              komentar.kualitatif
-            }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </div>
+    <v-row no-gutters="true" class="pa-4" justify="space-evenly">
+      <v-col>
+        <h2 class="align-center">Komentar Penilai</h2>
+        <v-row v-if="komentarData.length > 0">
+          <v-col
+            v-for="(komentar, index) in komentarData"
+            :key="index"
+            class="ma-2"
+            sm="12"
+            md="5"
+          >
+            {{ komentar.kualitatif }}
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 <script>
