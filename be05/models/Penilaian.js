@@ -105,7 +105,7 @@ const Penilaian = {
             , p.status
             , p.id_penilaian
             FROM rupa_senja.pasangan_penilaian p
-            LEFT JOIN rupa_senja.st s ON p.id_st = s.id
+            LEFT JOIN rupa_senja.st s ON p.no_st = s.no_st
             where p.status = 0
             and p.id_penilai = ?
             ORDER BY p.id_st, p.id_dinilai

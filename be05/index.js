@@ -27,9 +27,9 @@ app.use("/penilaian", PenilaianRoutes);
 app.use("/user-vote", userVoteRoutes); // Register the new route
 
 // Handles any requests that don't match the ones above
-app.get('*', (req,res) =>{
-    // res.sendFile(path.join(__dirname, '../../fe05/dist/index.html'));
-});
+// app.get('*', (req,res) =>{
+//     res.sendFile(path.join(__dirname, '../../fe05/dist/index.html'));
+// });
 
 // Start the server
 app.listen(PORT, () => {

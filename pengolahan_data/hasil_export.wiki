@@ -1,0 +1,257 @@
+<div id="9a7a1c98" class="cell code" execution_count="1">
+
+<syntaxhighlight lang="python">import pandas as pd
+import duckdb as ddb</syntaxhighlight>
+
+</div>
+<div id="58314e3f" class="cell code" execution_count="2">
+
+<syntaxhighlight lang="python">st = pd.read_excel('db_rik.xlsx', sheet_name='st')
+tugas = pd.read_excel('db_rik.xlsx', sheet_name='tugas')
+personil = pd.read_excel('db_sdm.xlsx', sheet_name='nama')</syntaxhighlight>
+
+</div>
+<div id="0ddb5ad2" class="cell code" execution_count="3">
+
+<syntaxhighlight lang="python">st.sort_values(by=['tglst', 'id'], inplace=True)
+# st.sort_values(by='id', inplace=True)
+st.insert(0, 'id_st', st.index + 1)
+st.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="3">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"id","rawType":"object","type":"string"},{"name":"thn","rawType":"int64","type":"integer"},{"name":"entabr","rawType":"object","type":"string"},{"name":"tglst","rawType":"datetime64[ns]","type":"datetime"},{"name":"awalst","rawType":"datetime64[ns]","type":"datetime"},{"name":"akhirst","rawType":"datetime64[ns]","type":"datetime"},{"name":"stlink","rawType":"object","type":"string"},{"name":"perihalst","rawType":"object","type":"string"},{"name":"jnsrik","rawType":"object","type":"string"},{"name":"tahaprik","rawType":"object","type":"string"}],"ref":"4169f7ec-9e23-4aae-a050-a186ea7a4fb2","rows":[["0","1","32/ST/XIX.DPS/03/2008","2008","Jembrana","2008-03-19 00:00:00","2008-03-19 00:00:00","2008-04-23 00:00:00","https://smp.bpk.go.id/Perencanaan/SuratTugas/Details/97ca112c-bcd3-4f0c-88e6-0ce4cd7d1115","Pemeriksaan atas Laporan Keuangan Pemerintah Kabupaten Jembrana TA. 2007 di Negara","Keuangan","Terinci"],["1","2","41/ST/XIX.DPS/04/2008","2008","Badung","2008-04-01 00:00:00","2008-04-01 00:00:00","2008-05-06 00:00:00","https://smp.bpk.go.id/Perencanaan/SuratTugas/Details/9eb20725-5df1-4756-9b02-90523e55ae54","Pemeriksaan atas LAporan Keuangan Pemerintah Daerah (LKPD) TA. 2007 pada Pemerintah Kabupaten Badung di Sempidi","Keuangan","Terinci"],["2","3","46/ST/XIX.DPS/04/2008","2008","Tabanan","2008-04-04 00:00:00","2008-04-04 00:00:00","2008-05-09 00:00:00","https://smp.bpk.go.id/Perencanaan/SuratTugas/Details/7c08c577-dfbc-4521-be3b-51d34c77ec9b","Pemeriksaan atas Laporan Keuangan Pemerintah Daerah (LKPD) TA. 2007 pada Pemerintah Kabupaten Tabanan di Tabanan","Keuangan","Terinci"],["4","5","49/ST/XIX.DPS/04/2008","2008","Bali","2008-04-08 00:00:00","2008-04-08 00:00:00","2008-05-18 00:00:00","https://smp.bpk.go.id/Perencanaan/SuratTugas/Details/384b1059-d9dc-4769-90b0-402ee6e805b1","Pemeriksaan LKPD TA. 2007 Provinsi Bali","Keuangan","Terinci"],["3","4","51/ST/XIX.DPS/04/2008","2008","Klungkung","2008-04-08 00:00:00","2008-04-08 00:00:00","2008-05-13 00:00:00","https://smp.bpk.go.id/Perencanaan/SuratTugas/Details/f44970fa-0791-423d-b30f-87e969687be2","Pemeriksaan atas Laporan Keuangan Pemerintah Daerah TA. 2007 pada Kabupaten Klungkung di Semarapura.","Keuangan","Terinci"]],"shape":{"columns":11,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="07b114de" class="cell code" execution_count="4">
+
+<syntaxhighlight lang="python">st_pilih = ddb.query("""
+SELECT id_st
+        , id AS no_st
+        , thn
+        , entabr
+        , tglst
+        , perihalst
+FROM st
+WHERE thn = 2025 AND tahaprik = 'Terinci' AND jnsrik <> 'DTT Banparpol'
+""").to_df()
+
+st_pilih.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="4">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st","rawType":"object","type":"string"},{"name":"thn","rawType":"int64","type":"integer"},{"name":"entabr","rawType":"object","type":"string"},{"name":"tglst","rawType":"datetime64[ns]","type":"datetime"},{"name":"perihalst","rawType":"object","type":"string"}],"ref":"d5297488-c9e2-4a91-a579-abf562155693","rows":[["0","763","83/ST/XIX.DPS/03/2025","2025","Bali","2025-03-27 00:00:00","Pemeriksaan Terinci atas Laporan Keuangan Pemerintah Daerah Provinsi Bali Tahun 2024 di Denpasar"],["1","764","84/ST/XIX.DPS/03/2025","2025","Badung","2025-03-27 00:00:00","Pemeriksaan Terinci atas Laporan Keuangan Pemerintah Daerah Kabupaten Badung Tahun 2024 di Mangupura"],["2","765","85/ST/XIX.DPS/03/2025","2025","Bangli","2025-03-27 00:00:00","Pemeriksaan Terinci atas Laporan Keuangan Pemerintah Daerah Kabupaten Bangli Tahun 2024 di Bangli"],["3","766","86/ST/XIX.DPS/03/2025","2025","Buleleng","2025-03-27 00:00:00","Pemeriksaan Terinci atas Laporan Keuangan Pemerintah Daerah Kabupaten Buleleng Tahun 2024 di Singaraja"],["4","767","87/ST/XIX.DPS/03/2025","2025","Denpasar","2025-03-27 00:00:00","Pemeriksaan Terinci atas Laporan Keuangan Pemerintah Daerah Kota Denpasar Tahun 2024 di Denpasar"]],"shape":{"columns":6,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="2035fb1d" class="cell code" execution_count="5">
+
+<syntaxhighlight lang="python">personil.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="5">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id","rawType":"object","type":"string"},{"name":"nama","rawType":"object","type":"string"},{"name":"nip","rawType":"float64","type":"float"},{"name":"email","rawType":"object","type":"string"},{"name":"tmplahir","rawType":"object","type":"string"},{"name":"tgllahir","rawType":"object","type":"unknown"},{"name":"profillink","rawType":"object","type":"string"},{"name":"fotolink","rawType":"object","type":"string"},{"name":"angkatan","rawType":"float64","type":"float"},{"name":"jnsjab","rawType":"object","type":"unknown"},{"name":"jab","rawType":"object","type":"unknown"},{"name":"unker","rawType":"object","type":"unknown"},{"name":"subunker","rawType":"object","type":"unknown"},{"name":"dosir","rawType":"object","type":"unknown"},{"name":"titeldepan","rawType":"float64","type":"float"},{"name":"titelbelakang","rawType":"object","type":"unknown"},{"name":"statpeg","rawType":"object","type":"string"},{"name":"aktifpeg","rawType":"object","type":"string"},{"name":"jnskel","rawType":"object","type":"string"},{"name":"ponsel","rawType":"float64","type":"float"},{"name":"latdik","rawType":"object","type":"string"},{"name":"tmtbali","rawType":"datetime64[ns]","type":"datetime"},{"name":"ttl","rawType":"object","type":"string"},{"name":"teamslink","rawType":"object","type":"string"},{"name":"walink","rawType":"object","type":"string"}],"ref":"750af281-57d7-445f-ae88-c53cace9c19a","rows":[["0","240003444","I Gusti Ngurah Satria Perwira","1.97505212000031e+17","igusti.perwira@bpk.go.id","Denpasar","1975-05-21 00:00:00","https://smp.bpk.go.id/Perencanaan/ProfilPemeriksa/Details/240003444","https://sisdm.bpk.go.id/photo/240003444/md.jpg","2000.0","Struktural","Kepala Perwakilan","BPK Perwakilan Provinsi Bali","BPK Perwakilan Provinsi Bali",null,null,"S.E., M.M., Ak, CA, CSFA, GRCP, GRCA, ERMAP, CFrA","PNS","Aktif","Laki-laki","628123805696.0","Akuntansi","2017-02-06 00:00:00","Denpasar, 21 May 1975","https://teams.microsoft.com/l/chat/0/0?users=igusti.perwira@bpk.go.id","https://wa.me/628123805696"],["1","240003132","Nur Pramono","1.97609281999031e+17","npramono@bpk.go.id","Jakarta","1976-09-28 00:00:00","https://smp.bpk.go.id/Perencanaan/ProfilPemeriksa/Details/240003132","https://sisdm.bpk.go.id/photo/240003132/md.jpg","1999.0",null,null,null,null,null,null,null,"PNS","Nonaktif","Laki-laki","6287809466333.0","Teknik Informatika","2019-11-25 00:00:00","Jakarta, 28 Sep 1976","https://teams.microsoft.com/l/chat/0/0?users=npramono@bpk.go.id","https://wa.me/6287809466333"],["2","240005136","Al Kausar","1.98403292007081e+17","al.kausar@bpk.go.id","Tanjungkarang","1984-03-29 00:00:00","https://smp.bpk.go.id/Perencanaan/ProfilPemeriksa/Details/240005136","https://sisdm.bpk.go.id/photo/240005136/md.jpg","2007.0",null,null,null,null,null,null,null,"PNS","Nonaktif","Laki-laki","6281252215757.0","Hukum","2024-03-07 00:00:00","Tanjungkarang, 29 Mar 1984","https://teams.microsoft.com/l/chat/0/0?users=al.kausar@bpk.go.id","https://wa.me/6281252215757"],["3","240007937","Ikhsan Aprian","1.98404072010051e+17","ikhsan.aprian@bpk.go.id","Jakarta","1984-04-07 00:00:00","https://smp.bpk.go.id/Perencanaan/ProfilPemeriksa/Details/240007937","https://sisdm.bpk.go.id/photo/240007937/md.jpg","2010.0","Struktural","Kepala Bidang Pemeriksaan","Bidang Pemeriksaan","Bidang Pemeriksaan Bali I",null,null,"S.T., CertDA, CIISA","PNS","Aktif","Laki-laki","6281382669958.0","Teknik Geologi","2024-01-19 00:00:00","Jakarta, 7 Apr 1984","https://teams.microsoft.com/l/chat/0/0?users=ikhsan.aprian@bpk.go.id","https://wa.me/6281382669958"],["4","240002733","Ida Bagus Ketut Sidhastu","1.97010221997031e+17","ib.sidhastu@bpk.go.id","Denpasar","1970-10-22 00:00:00","https://smp.bpk.go.id/Perencanaan/ProfilPemeriksa/Details/240002733","https://sisdm.bpk.go.id/photo/240002733/md.jpg","1997.0","Struktural","Kepala Subbagian","Sekretariat Perwakilan","Subbagian SDM",null,null,"S.E., M.M.","PNS","Aktif","Laki-laki","6282145927454.0","Akuntansi","2022-03-01 00:00:00","Denpasar, 22 Oct 1970","https://teams.microsoft.com/l/chat/0/0?users=ib.sidhastu@bpk.go.id","https://wa.me/6282145927454"]],"shape":{"columns":25,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="bde99967" class="cell code" execution_count="6">
+
+<syntaxhighlight lang="python">tugas_pilih = ddb.query(
+"""
+select s.id_st
+, t.idst no_st
+, t.nama nama_personil
+, p.id id_personil
+, t.peranabr
+, t.urutanst
+from tugas t 
+join st_pilih s on t.idst = s.no_st
+left join personil p on t.nama = p.nama
+where t.peranabr not in ('PJ', 'WPJ')
+""").to_df()
+
+tugas_pilih.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="6">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st","rawType":"object","type":"string"},{"name":"nama_personil","rawType":"object","type":"string"},{"name":"id_personil","rawType":"object","type":"string"},{"name":"peranabr","rawType":"object","type":"string"},{"name":"urutanst","rawType":"int64","type":"integer"}],"ref":"211a0e3d-4e38-4569-9542-a36e5a87bf8f","rows":[["0","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4"],["1","763","83/ST/XIX.DPS/03/2025","Ida Bagus Ketut Wisnu","240002315","PT","5"],["2","763","83/ST/XIX.DPS/03/2025","I Gede Wiprada Pasupati","240005887","PT","6"],["3","763","83/ST/XIX.DPS/03/2025","Devi Kristyawan","240005520","KT","7"],["4","763","83/ST/XIX.DPS/03/2025","Ida Bagus Agung Wakya Parahita","240004959","KST","8"]],"shape":{"columns":6,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="af16af21" class="cell code" execution_count="7">
+
+<syntaxhighlight lang="python"># Self-merge to create all possible pairs within the same id_st
+paired_data = pd.merge(tugas_pilih, tugas_pilih, on='id_st', suffixes=('_1', '_2'))
+
+paired_data.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="7">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st_1","rawType":"object","type":"string"},{"name":"nama_personil_1","rawType":"object","type":"string"},{"name":"id_personil_1","rawType":"object","type":"string"},{"name":"peranabr_1","rawType":"object","type":"string"},{"name":"urutanst_1","rawType":"int64","type":"integer"},{"name":"no_st_2","rawType":"object","type":"string"},{"name":"nama_personil_2","rawType":"object","type":"string"},{"name":"id_personil_2","rawType":"object","type":"string"},{"name":"peranabr_2","rawType":"object","type":"string"},{"name":"urutanst_2","rawType":"int64","type":"integer"}],"ref":"0e0bb747-b20e-4469-832b-2e4f921375c1","rows":[["0","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4"],["1","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4","83/ST/XIX.DPS/03/2025","Ida Bagus Ketut Wisnu","240002315","PT","5"],["2","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4","83/ST/XIX.DPS/03/2025","I Gede Wiprada Pasupati","240005887","PT","6"],["3","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4","83/ST/XIX.DPS/03/2025","Devi Kristyawan","240005520","KT","7"],["4","763","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4","83/ST/XIX.DPS/03/2025","Ida Bagus Agung Wakya Parahita","240004959","KST","8"]],"shape":{"columns":11,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="01cdb117" class="cell code" execution_count="8">
+
+<syntaxhighlight lang="python"># Define the pairing rules
+# PT pairs with KT, KST, and itself
+rule_pt = (paired_data['peranabr_1'] == 'PT') & \
+          (paired_data['peranabr_2'].isin(['KT', 'KST']) | (paired_data['id_personil_1'] == paired_data['id_personil_2']))
+
+# KT pairs with PT, KST, AT, and itself
+rule_kt = (paired_data['peranabr_1'] == 'KT') & \
+          (paired_data['peranabr_2'].isin(['PT', 'KST', 'AT', 'KT']))
+
+# KST pairs with KT, AT, and itself
+rule_kst = (paired_data['peranabr_1'] == 'KST') & \
+           (paired_data['peranabr_2'].isin(['PT', 'KT', 'AT']) | (paired_data['id_personil_1'] == paired_data['id_personil_2']))
+
+# AT pairs with KT, KST, AT, and itself
+rule_at = (paired_data['peranabr_1'] == 'AT') & \
+          (paired_data['peranabr_2'].isin(['KT', 'KST', 'AT']))
+
+# Apply the rules to filter the pairs
+final_pairs = paired_data[rule_pt | rule_kt | rule_kst | rule_at].copy()
+
+# To avoid duplicate pairs (e.g., A-B and B-A), we keep only one version
+# final_pairs = final_pairs[final_pairs['id_personil_1'] <= final_pairs['id_personil_2']]
+
+final_pairs.reset_index(drop=True, inplace=True)
+final_pairs.head</syntaxhighlight>
+<div class="output execute_result" execution_count="8">
+
+<pre>&lt;bound method NDFrame.head of       id_st                               no_st_1           nama_personil_1  \
+0       763                 83/ST/XIX.DPS/03/2025     Desak Made Iik Jayani   
+1       763                 83/ST/XIX.DPS/03/2025     Desak Made Iik Jayani   
+2       763                 83/ST/XIX.DPS/03/2025     Desak Made Iik Jayani   
+3       763                 83/ST/XIX.DPS/03/2025     Desak Made Iik Jayani   
+4       763                 83/ST/XIX.DPS/03/2025     Desak Made Iik Jayani   
+...     ...                                   ...                       ...   
+1251    800  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025  Maretha Pafrika Hutajulu   
+1252    800  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025            Gemi Salvianto   
+1253    800  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025            Gemi Salvianto   
+1254    800  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025            Gemi Salvianto   
+1255    800  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025            Gemi Salvianto   
+
+     id_personil_1 peranabr_1  urutanst_1  \
+0        240003436         PT           4   
+1        240003436         PT           4   
+2        240003436         PT           4   
+3        240003436         PT           4   
+4        240003436         PT           4   
+...            ...        ...         ...   
+1251     240010354         AT           6   
+1252     240010275         AT           7   
+1253     240010275         AT           7   
+1254     240010275         AT           7   
+1255     240010275         AT           7   
+
+                                   no_st_2                 nama_personil_2  \
+0                    83/ST/XIX.DPS/03/2025           Desak Made Iik Jayani   
+1                    83/ST/XIX.DPS/03/2025                 Devi Kristyawan   
+2                    83/ST/XIX.DPS/03/2025  Ida Bagus Agung Wakya Parahita   
+3                    83/ST/XIX.DPS/03/2025                  Triana Wahyuni   
+4                    83/ST/XIX.DPS/03/2025     I Gede Agus Angga Priastana   
+...                                    ...                             ...   
+1251  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025                  Gemi Salvianto   
+1252  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025               Riki Aska Pranata   
+1253  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025          Clarisa Inda Oktaviana   
+1254  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025        Maretha Pafrika Hutajulu   
+1255  341/B/ST/DJPKN-VI.DPS/PPD.02/10/2025                  Gemi Salvianto   
+
+     id_personil_2 peranabr_2  urutanst_2  
+0        240003436         PT           4  
+1        240005520         KT           7  
+2        240004959        KST           8  
+3        240005023        KST           9  
+4        240007263        KST          10  
+...            ...        ...         ...  
+1251     240010275         AT           7  
+1252     240011197         KT           4  
+1253     240009846         AT           5  
+1254     240010354         AT           6  
+1255     240010275         AT           7  
+
+[1256 rows x 11 columns]&gt;</pre>
+
+</div>
+
+</div>
+<div id="6fa7db23" class="cell code" execution_count="10">
+
+<syntaxhighlight lang="python">final_pairs[final_pairs['nama_personil_1'].str.contains('Angga')].head()</syntaxhighlight>
+<div class="output execute_result" execution_count="10">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st_1","rawType":"object","type":"string"},{"name":"nama_personil_1","rawType":"object","type":"string"},{"name":"id_personil_1","rawType":"object","type":"string"},{"name":"peranabr_1","rawType":"object","type":"string"},{"name":"urutanst_1","rawType":"int64","type":"integer"},{"name":"no_st_2","rawType":"object","type":"string"},{"name":"nama_personil_2","rawType":"object","type":"string"},{"name":"id_personil_2","rawType":"object","type":"string"},{"name":"peranabr_2","rawType":"object","type":"string"},{"name":"urutanst_2","rawType":"int64","type":"integer"}],"ref":"cede2a83-d95c-4f7d-85f7-709c9cc94834","rows":[["56","763","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10","83/ST/XIX.DPS/03/2025","Desak Made Iik Jayani","240003436","PT","4"],["57","763","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10","83/ST/XIX.DPS/03/2025","Ida Bagus Ketut Wisnu","240002315","PT","5"],["58","763","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10","83/ST/XIX.DPS/03/2025","I Gede Wiprada Pasupati","240005887","PT","6"],["59","763","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10","83/ST/XIX.DPS/03/2025","Devi Kristyawan","240005520","KT","7"],["60","763","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10","83/ST/XIX.DPS/03/2025","I Gede Agus Angga Priastana","240007263","KST","10"]],"shape":{"columns":11,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="e75558d4" class="cell code" execution_count="11">
+
+<syntaxhighlight lang="python"># Select and rename columns for clarity
+final_pairs = final_pairs[[
+    'id_st', 'no_st_1', 'id_personil_1', 'nama_personil_1', 'peranabr_1', 
+    'id_personil_2', 'nama_personil_2', 'peranabr_2'
+]].reset_index(drop=True)
+
+final_pairs.columns = [
+    'id_st', 'no_st', 'id_penilai', 'nama_penilai', 'peran_penilai', 
+    'id_dinilai', 'nama_dinilai', 'peran_dinilai'
+]
+
+# Add a unique ID for each pair
+# final_pairs.insert(0, 'id_penilaian', range(1, 1 + len(final_pairs)))
+
+
+final_pairs.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="11">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st","rawType":"object","type":"string"},{"name":"id_penilai","rawType":"object","type":"string"},{"name":"nama_penilai","rawType":"object","type":"string"},{"name":"peran_penilai","rawType":"object","type":"string"},{"name":"id_dinilai","rawType":"object","type":"string"},{"name":"nama_dinilai","rawType":"object","type":"string"},{"name":"peran_dinilai","rawType":"object","type":"string"}],"ref":"a564dd77-e7c7-4e94-bb48-82d3d74c601b","rows":[["0","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240003436","Desak Made Iik Jayani","PT"],["1","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240005520","Devi Kristyawan","KT"],["2","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240004959","Ida Bagus Agung Wakya Parahita","KST"],["3","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240005023","Triana Wahyuni","KST"],["4","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240007263","I Gede Agus Angga Priastana","KST"]],"shape":{"columns":8,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="eb8874d6" class="cell code" execution_count="12">
+
+<syntaxhighlight lang="python">penilaian = ddb.query(
+"""
+SELECT id_st
+, no_st
+, id_penilai
+, nama_penilai
+, peran_penilai
+, id_dinilai
+, nama_dinilai
+, peran_dinilai 
+, cast(1 as double) AS rik_renc
+, cast(1 as double) AS rik_laks
+, cast(1 as double) AS rik_lap
+, cast(1 as double) AS pelayanan
+, cast(1 as double) AS akuntabel
+, cast(1 as double) AS kompeten
+, cast(1 as double) AS harmoni
+, cast(1 as double) AS loyal
+, cast(1 as double) AS adaptif
+, cast(1 as double) AS kolaboratif
+, cast('dolor ipsum' as TEXT) AS kualitatif
+, cast(0 as INTEGER) AS status
+FROM final_pairs
+"""
+).to_df()
+
+penilaian.head()</syntaxhighlight>
+<div class="output execute_result" execution_count="12">
+
+<syntaxhighlight lang="json">{"columns":[{"name":"index","rawType":"int64","type":"integer"},{"name":"id_st","rawType":"int64","type":"integer"},{"name":"no_st","rawType":"object","type":"string"},{"name":"id_penilai","rawType":"object","type":"string"},{"name":"nama_penilai","rawType":"object","type":"string"},{"name":"peran_penilai","rawType":"object","type":"string"},{"name":"id_dinilai","rawType":"object","type":"string"},{"name":"nama_dinilai","rawType":"object","type":"string"},{"name":"peran_dinilai","rawType":"object","type":"string"},{"name":"rik_renc","rawType":"float64","type":"float"},{"name":"rik_laks","rawType":"float64","type":"float"},{"name":"rik_lap","rawType":"float64","type":"float"},{"name":"pelayanan","rawType":"float64","type":"float"},{"name":"akuntabel","rawType":"float64","type":"float"},{"name":"kompeten","rawType":"float64","type":"float"},{"name":"harmoni","rawType":"float64","type":"float"},{"name":"loyal","rawType":"float64","type":"float"},{"name":"adaptif","rawType":"float64","type":"float"},{"name":"kolaboratif","rawType":"float64","type":"float"},{"name":"kualitatif","rawType":"object","type":"string"},{"name":"status","rawType":"int32","type":"integer"}],"ref":"4c68b6ea-db3a-463c-b0b3-bbde538025e2","rows":[["0","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240003436","Desak Made Iik Jayani","PT","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","dolor ipsum","0"],["1","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240005520","Devi Kristyawan","KT","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","dolor ipsum","0"],["2","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240004959","Ida Bagus Agung Wakya Parahita","KST","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","dolor ipsum","0"],["3","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240005023","Triana Wahyuni","KST","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","dolor ipsum","0"],["4","763","83/ST/XIX.DPS/03/2025","240003436","Desak Made Iik Jayani","PT","240007263","I Gede Agus Angga Priastana","KST","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","dolor ipsum","0"]],"shape":{"columns":20,"rows":5}}</syntaxhighlight>
+
+</div>
+
+</div>
+<div id="440d7c15" class="cell code" execution_count="20">
+
+<syntaxhighlight lang="python">st_pilih.to_csv('st_pilih.csv', index=False, sep=';')
+penilaian.to_csv('penilaian.csv', index=False, sep=';')</syntaxhighlight>
+
+</div>
