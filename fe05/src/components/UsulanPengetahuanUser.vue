@@ -50,7 +50,7 @@ export default {
       try {
         const response = await apiClient.get("/usulan-pengetahuan");
         this.usulanPengetahuanList = response.data.data;
-        console.log("Fetched usulan pengetahuan:", response.data.data);
+        // console.log("Fetched usulan pengetahuan:", response.data.data);
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }
@@ -93,8 +93,7 @@ export default {
   watch: {
     usulanPengetahuanList(newList) {
       // Check vote status for each item when the list is updated
-      const user_id = 1; // TODO: Replace '1' with the actual authenticated user ID
-      if (user_id && Array.isArray(newList)) {
+      if (this.id_user && Array.isArray(newList)) {
         newList.forEach((item) => {
           this.checkIfVoted(item.id);
         });

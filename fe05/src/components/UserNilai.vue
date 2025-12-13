@@ -124,7 +124,7 @@ export default {
         .get(`/penilaian/dinilai/${this.id_pegawai}`)
         .then((response) => {
           this.NilaiPersonal = response.data;
-          console.log("Fetched Nilai Personal:", this.NilaiPersonal);
+          // console.log("Fetched Nilai Personal:", this.NilaiPersonal);
         })
         .catch((error) => {
           console.error("Error fetching Nilai Personal:", error);

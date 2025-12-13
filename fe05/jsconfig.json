@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
-    "baseUrl": "./",
+    "baseUrl": "http://10.50.1.25/rupa_senja/",
     "moduleResolution": "node",
     "paths": {
       "@/*": ["src/*"]

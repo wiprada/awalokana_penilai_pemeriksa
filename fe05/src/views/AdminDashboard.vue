@@ -1,6 +1,6 @@
 <template>
   <v-container fluid wrap width="100%" class="bg-purple-lighten-2">
-    <v-row align-content="space-between" no-gutters="true">
+    <v-row align-content="space-between" no-gutters>
       <v-col sm="12" md="2"
         ><v-img
           :src="require('@/assets/logo.png')"
@@ -24,7 +24,7 @@
     </v-row>
   </v-container>
   <v-container fluid wrap width="100%" class="bg-secondary">
-    <v-row align-content="center" no-gutters="true" class="justify-center">
+    <v-row align-content="center" no-gutters class="justify-center">
       <v-col
         v-for="tab in tabs"
         :key="tab"
@@ -45,10 +45,10 @@
     </v-row>
   </v-container>
   <v-container fluid wrap width="100%">
-    <v-row align-content="stretch" no-gutters="true">
+    <v-row align-content="stretch" no-gutters>
       <v-col>
         <div v-if="activeTab === 'Manajemen User'">
-          <v-row wrap no-gutters="true" justify="space-between">
+          <v-row wrap no-gutters justify="space-between">
             <v-col>
               <AdminDaftarUser />
             </v-col>
@@ -58,7 +58,7 @@
           <AdminNilaiUser />
         </div>
         <div v-if="activeTab === 'Manajemen Pengetahuan'">
-          <v-row no-gutters="true" justify="space-between">
+          <v-row no-gutters justify="space-between">
             <v-col>
               <v-row>
                 <v-col
@@ -124,7 +124,7 @@ export default {
       try {
         const response = await api.get("/usulan-pengetahuan");
         this.usulanPengetahuanList = response.data.data;
-        console.log("Fetched usulan pengetahuan:", response.data.data);
+        // console.log("Fetched usulan pengetahuan:", response.data.data);
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }

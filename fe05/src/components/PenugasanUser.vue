@@ -1,8 +1,8 @@
 <template>
   <v-container fluid class="bg-info">
-    <v-row no-gutters="true" justify="space-evenly" align-content="center">
+    <v-row no-gutters justify="space-evenly" align-content="center">
       <v-col>
-        <v-row no-gutters="true">
+        <v-row no-gutters>
           <v-col
             v-for="item in penilaianData"
             :key="item.id_penilaian"
@@ -38,7 +38,7 @@ export default {
           `/penilaian/penilai/${this.id_penilai}`
         );
         this.penilaianData = response.data;
-        console.log("Fetched penilaian data:", this.penilaianData);
+        // console.log("Fetched penilaian data:", this.penilaianData);
       } catch (error) {
         console.error("Error fetching penilaian data:", error);
       }

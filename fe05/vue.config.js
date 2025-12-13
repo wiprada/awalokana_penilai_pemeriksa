@@ -11,6 +11,7 @@ module.exports = defineConfig({
         pathRewrite: { "^/api": "" },
       },
     },
+    historyApiFallback: true,
   },
   publicPath: process.env.NODE_ENV === "production" ? "/rupa_senja/" : "/",
 });

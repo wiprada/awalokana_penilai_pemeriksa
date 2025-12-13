@@ -42,7 +42,7 @@ export default {
   methods: {
     usulkanPengetahuan() {
       // Implement the logic to submit the knowledge proposal
-      console.log("Usulan Pengetahuan:", this.narasumber, this.materi);
+      // console.log("Usulan Pengetahuan:", this.narasumber, this.materi);
       // You can add an API call here to submit the data to the backend
       // TODO: Replace 'Current User' with the actual name of the logged-in user
       // const pengusul = "Current User";
@@ -66,7 +66,7 @@ export default {
       try {
         const response = await api.get("/users/names");
         this.nama = response.data.pegawai;
-        console.log("Fetched names:", this.nama);
+        // console.log("Fetched names:", this.nama);
       } catch (error) {
         console.error("Error fetching names:", error);
       }

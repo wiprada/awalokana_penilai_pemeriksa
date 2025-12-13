@@ -1,7 +1,31 @@
 <template>
-  <div class="usulan-container">
-    <div>
-      <h1 class="align-center">Usulan Berbagi Pengetahuan</h1>
+  <v-container>
+    <v-row no-gutters justify="center" align-content="center">
+      <v-col class="text-center">
+        <h1>Usulan Berbagi Pengetahuan</h1>
+      </v-col>
+    </v-row>
+    <v-row
+      v-for="item in usulanData"
+      :key="item.id"
+      no-gutters
+      justify="center"
+      align-content="center"
+      class="ma-4 elevation-8"
+    >
+      <v-col class="pa-4 bg-background-lighten-3">
+        <div class="text-warning">
+          <h3>Narasumber : {{ item.narasumber }}</h3>
+        </div>
+        <div>{{ item.pengetahuan }}</div>
+        <v-divider></v-divider>
+        <div class="mt-10">{{ item.jml_vote || 0 }} votes</div>
+      </v-col>
+    </v-row>
+  </v-container>
+  <!-- <div class="usulan-container">
+    <div class="align-center">
+      <h1 >Usulan Berbagi Pengetahuan</h1>
     </div>
     <table class="table table-striped">
       <thead>
@@ -19,7 +43,7 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -41,7 +65,7 @@ export default {
 
         // Simpan data dan informasi paginasi dari server
         this.usulanData = response.data.data;
-        console.log(this.usulanData);
+        // console.log(this.usulanData);
       } catch (error) {
         console.error("Gagal mengambil data:", error);
       } finally {
@@ -55,48 +79,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.usulan-container {
-  margin: 20px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: 12px 15px;
-  text-align: left;
-  align-items: first baseline;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.table thead th {
-  align-content: center;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* Zebra-striping */
-.table tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Highlight on hover */
-.table tbody tr:hover {
-  background-color: #cce5ff; /* Light blue highlight */
-  color: #004085;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.table tbody tr {
-  transition: background-color 0.2s ease-in-out;
-}
-</style>

@@ -1,8 +1,15 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL:
-    process.env.NODE_ENV === "production" ? "http://localhost:3000" : "/api",
+  //   const apiClient = axios.create({
+  //   baseURL:
+  //     process.env.NODE_ENV === "production"
+  //       ? "http://10.50.1.25:3000"
+  //       : "http://10.50.1.25:3000",
+  //   //...
+  // });
+  // baseURL: "http://10.50.1.25:3000",
+  baseURL: "http://localhost:3000",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

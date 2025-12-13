@@ -37,7 +37,7 @@ export default {
           `/penilaian/kualitatif/${this.id_pegawai}`
         );
         this.komentarPersonal = response.data;
-        console.log("Fetched komentar data:", this.komentarPersonal);
+        // console.log("Fetched komentar data:", this.komentarPersonal);
       } catch (error) {
         console.error("Error fetching komentar data:", error);
       }

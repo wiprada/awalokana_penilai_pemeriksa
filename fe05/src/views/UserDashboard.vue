@@ -1,6 +1,6 @@
 <template>
   <v-container fluid wrap width="100%" class="bg-orange-lighten-2">
-    <v-row align-content="space-between" no-gutters="true">
+    <v-row align-content="space-between" no-gutters>
       <v-col sm="12" md="2"
         ><v-img
           :src="require('@/assets/logo.png')"
@@ -26,7 +26,7 @@
     </v-row>
   </v-container>
   <v-container fluid wrap width="100%" class="bg-secondary">
-    <v-row align-content="center" no-gutters="true" class="justify-center">
+    <v-row align-content="center" no-gutters class="justify-center">
       <v-col
         v-for="tab in tabs"
         :key="tab"
@@ -47,10 +47,10 @@
     </v-row>
   </v-container>
   <v-container fluid wrap width="100%">
-    <v-row align-content="stretch" no-gutters="true">
+    <v-row align-content="stretch" no-gutters>
       <v-col>
         <div v-if="activeTab === 'Nilai Personal'">
-          <v-row wrap no-gutters="true" justify="space-between">
+          <v-row wrap no-gutters justify="space-between">
             <v-col sm="12" md="3" class="pa-1 ma-1">
               <UserNilai />
             </v-col>
@@ -63,7 +63,7 @@
           <PenugasanUser />
         </div>
         <div v-if="activeTab === 'Manajemen Pengetahuan'">
-          <v-row wrap no-gutters="true" justify="space-between">
+          <v-row wrap no-gutters justify="space-between">
             <v-col sm="12" md="3" class="pa-1 ma-1">
               <UsulanPengetahuanTambah />
             </v-col>
@@ -122,7 +122,7 @@ export default {
       try {
         const response = await api.get("/usulan-pengetahuan");
         this.usulanPengetahuanList = response.data.data;
-        console.log("Fetched usulan pengetahuan:", response.data.data);
+        // console.log("Fetched usulan pengetahuan:", response.data.data);
       } catch (error) {
         console.error("Error fetching usulan pengetahuan:", error);
       }

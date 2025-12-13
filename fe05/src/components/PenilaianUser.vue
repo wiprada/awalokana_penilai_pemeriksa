@@ -1,6 +1,6 @@
 <template>
   <v-container fluid width="100%">
-    <v-row no-gutters="true">
+    <v-row no-gutters>
       <v-col>
         <v-card outlined>
           <v-card-title>ST: {{ item.no_st }}</v-card-title>
@@ -18,56 +18,55 @@
             <div><strong>Peran Anda:</strong> {{ item.peran_penilai }}</div>
             <v-divider></v-divider>
             <div class="text-subtitle-1">Aspek Pemeriksaan:</div>
-            <table>
-              <tr>
-                <td>Perencanaan</td>
-                <td>
-                  <v-Rating
-                    hover
-                    :length="5"
-                    :size="30"
-                    :model-value="2"
-                    active-color="primary"
-                    empty-icon="mdi-thumb-up-outline"
-                    full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiRikRenc"
-                    label="Perencanaan"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Pelaksanaan</td>
-                <td>
-                  <v-Rating
-                    hover
-                    :length="5"
-                    :size="30"
-                    :model-value="2"
-                    active-color="primary"
-                    empty-icon="mdi-thumb-up-outline"
-                    full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiRikLaks"
-                    label="Pelaksanaan"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Pelaporan</td>
-                <td>
-                  <v-Rating
-                    hover
-                    :length="5"
-                    :size="30"
-                    :model-value="2"
-                    active-color="primary"
-                    empty-icon="mdi-thumb-up-outline"
-                    full-icon="mdi-thumb-up"
-                    v-model="editedItem.NilaiRikLap"
-                    label="Pelaporan"
-                  />
-                </td>
-              </tr>
-            </table>
+            <tr>
+              <td>Perencanaan</td>
+              <td>
+                <v-Rating
+                  hover
+                  value="{{ item.NilaiRikRenc }}"
+                  :length="5"
+                  :size="30"
+                  :model-value="2"
+                  active-color="primary"
+                  empty-icon="mdi-thumb-up-outline"
+                  full-icon="mdi-thumb-up"
+                  v-model="editedItem.NilaiRikRenc"
+                  label="Perencanaan"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Pelaksanaan</td>
+              <td>
+                <v-Rating
+                  hover
+                  :length="5"
+                  :size="30"
+                  :model-value="2"
+                  active-color="primary"
+                  empty-icon="mdi-thumb-up-outline"
+                  full-icon="mdi-thumb-up"
+                  v-model="editedItem.NilaiRikLaks"
+                  label="Pelaksanaan"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Pelaporan</td>
+              <td>
+                <v-Rating
+                  hover
+                  :length="5"
+                  :size="30"
+                  :model-value="2"
+                  active-color="primary"
+                  empty-icon="mdi-thumb-up-outline"
+                  full-icon="mdi-thumb-up"
+                  v-model="editedItem.NilaiRikLap"
+                  label="Pelaporan"
+                />
+              </td>
+            </tr>
             <v-divider></v-divider>
             <div class="text-subtitle-1">Aspek Perilaku:</div>
             <tr>
@@ -249,7 +248,7 @@ export default {
           `/penilaian/penilai/${this.id_penilai}`
         );
         this.penilaianData = response.data;
-        console.log("Fetched penilaian data:", this.penilaianData);
+        // console.log("Fetched penilaian data:", this.penilaianData);
       } catch (error) {
         console.error("Error fetching penilaian data:", error);
       }
@@ -258,7 +257,7 @@ export default {
       // Logic to save the penilaian data
       // update id_penilaian in editedItem
       this.editedItem.id_penilaian = this.item.id_penilaian;
-      console.log("Saving penilaian data:", this.editedItem);
+      // console.log("Saving penilaian data:", this.editedItem);
       // You can make an API call here to save the data to the backend
       apiClient
         .put("/penilaian/update", this.editedItem)

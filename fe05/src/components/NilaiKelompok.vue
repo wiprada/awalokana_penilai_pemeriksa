@@ -128,7 +128,7 @@ export default {
         .get(`/penilaian/kelompok/${this.grup}`)
         .then((response) => {
           this.NilaiKelompok = response.data;
-          console.log("Fetched nilai kelompok:", response.data);
+          // console.log("Fetched nilai kelompok:", response.data);
         })
         .catch((error) => {
           console.error("Error fetching nilai kelompok:", error);

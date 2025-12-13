@@ -30,12 +30,6 @@
       </template>
     </v-data-table>
   </v-row>
-  <!-- <v-sheet v-for="item in progressData" :key="item.id_penilai">
-    <v-card>
-      <v-card-text> {{ item.penilai }} : {{ item.id_penilai }} </v-card-text>
-      
-    </v-card>
-  </v-sheet> -->
 </template>
 <script>
 import apiClient from "@/services/api";
@@ -62,7 +56,7 @@ export default {
       try {
         const response = await apiClient.get("/penilaian/admin/progress");
         this.progressData = response.data;
-        console.log("Fetched progress data:", this.progressData);
+        // console.log("Fetched progress data:", this.progressData);
       } catch (error) {
         console.error("Error fetching progress data:", error);
       }
