@@ -9,7 +9,10 @@
             sm="12"
             md="4"
           >
-            <PenilaianUser :item="item" />
+            <PenilaianUser
+              :item="item"
+              @penilaian-saved="handlesavePenilaian"
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -42,6 +45,9 @@ export default {
       } catch (error) {
         console.error("Error fetching penilaian data:", error);
       }
+    },
+    handlesavePenilaian() {
+      this.fetchPenilaian();
     },
   },
   mounted() {

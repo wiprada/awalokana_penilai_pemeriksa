@@ -23,10 +23,8 @@
               <td>
                 <v-Rating
                   hover
-                  value="{{ item.NilaiRikRenc }}"
                   :length="5"
                   :size="30"
-                  :model-value="2"
                   active-color="primary"
                   empty-icon="mdi-thumb-up-outline"
                   full-icon="mdi-thumb-up"
@@ -218,51 +216,33 @@ export default {
   },
   data() {
     return {
-      penilaianData: [],
       id_penilai: null,
       editedItem: {
-        id_penilaian: "",
-        // dinilai: '',
-        // id_dinilai: '',
-        // fotolink: '',
-        NilaiRikRenc: 0,
-        NilaiRikLaks: 0,
-        NilaiRikLap: 0,
-        NilaiPelayanan: 0,
-        NilaiAkuntabel: 0,
-        NilaiKompeten: 0,
-        NilaiHarmoni: 0,
-        NilaiLoyal: 0,
-        NilaiAdaptif: 0,
-        NilaiKolaboratif: 0,
-        NilaiKualitatif: "",
+        id_penilaian: this.item.id_penilaian,
+        NilaiRikRenc: this.item.rik_renc,
+        NilaiRikLaks: this.item.rik_laks,
+        NilaiRikLap: this.item.rik_lap,
+        NilaiPelayanan: this.item.pelayanan,
+        NilaiAkuntabel: this.item.akuntabel,
+        NilaiKompeten: this.item.kompeten,
+        NilaiHarmoni: this.item.harmoni,
+        NilaiLoyal: this.item.loyal,
+        NilaiAdaptif: this.item.adaptif,
+        NilaiKolaboratif: this.item.kolaboratif,
+        NilaiKualitatif: this.item.kualitatif,
       },
       isSaved: false,
     };
   },
   methods: {
-    async fetchPenilaian() {
-      try {
-        // Logic to fetch penilaian data
-        const response = await apiClient.get(
-          `/penilaian/penilai/${this.id_penilai}`
-        );
-        this.penilaianData = response.data;
-        // console.log("Fetched penilaian data:", this.penilaianData);
-      } catch (error) {
-        console.error("Error fetching penilaian data:", error);
-      }
-    },
     savePenilaian() {
       // Logic to save the penilaian data
-      // update id_penilaian in editedItem
-      this.editedItem.id_penilaian = this.item.id_penilaian;
-      // console.log("Saving penilaian data:", this.editedItem);
       // You can make an API call here to save the data to the backend
       apiClient
         .put("/penilaian/update", this.editedItem)
         .then((response) => {
           console.log("Penilaian saved successfully:", response.data);
+          this.$emit("penilaian-saved");
           alert("Penilaian berhasil disimpan!");
         })
         .catch((error) => {
@@ -277,7 +257,6 @@ export default {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       this.id_penilai = user.id;
-      this.fetchPenilaian();
     }
   },
 };
